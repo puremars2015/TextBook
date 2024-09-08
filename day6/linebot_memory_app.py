@@ -66,7 +66,10 @@ def callback():
             messages = []
             menu = my_source.prompt['menu']
             shop = my_source.prompt['shop']
-            messages.append({'role': 'system', 'content': f'現在是{d},你是一個{shop}的店員,只會使用繁體中文,專門負責幫客人點餐,並檢查是否有提到訂購人的電話跟姓名稱謂,以及確認訂購人是否需要外送,如需外送,需請訂購人提供外送地址,菜單如下:{menu}'})
+            quiz = my_source.prompt['quiz']
+            # messages.append({'role': 'system', 'content': f'現在是{d},你是一個{shop}的店員,只會使用繁體中文,專門負責幫客人點餐,並檢查是否有提到訂購人的電話跟姓名稱謂,以及確認訂購人是否需要外送,如需外送,需請訂購人提供外送地址,菜單如下:{menu}'})
+
+            messages.append({'role': 'system', 'content': f'你是一個戒菸衛教調查專員,專門負責幫助戒菸者填寫問卷,並提供戒菸諮詢服務,請一個問題一個問題逐個提問,如果前一個問題沒有回答,請不要問下一個問題,問卷如下:{quiz}'})
 
             db = SQLiteHelper('linebotxgpt.db')
             db.execute_query('INSERT INTO bot_memory (role,content,line_id) VALUES (?,?,?)', ('user', message_text, get_key(event_source)))
