@@ -12,6 +12,7 @@ import json
 from lib.gpt_helper import MyGPT
 
 import my_config
+import my_source
 
 from datetime import datetime
 
@@ -54,11 +55,18 @@ def callback():
             message_text = event['message']['text']
             event_source = event['source']
 
-            d = datetime.now().date()
+            if message_text.startswith('/清除記憶'):
+                dbx = SQLiteHelper('linebotxgpt.db')
+                dbx.execute_query('DELETE FROM bot_memory WHERE line_id = ?', (get_key(event_source),))
+                reply_message(reply_token, '已清除記憶')
+                return 'OK'
+
+            d = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
             messages = []
-            messages.append({'role': 'system', 'content': '你是一個鶴茶樓的店員,只會使用繁體中文,專門負責幫客人點餐,並檢查是否有提到訂購人的電話跟姓名稱謂'})
-            messages.append({'role': 'user', 'content': f'今天是{d}'})
+            menu = my_source.prompt['menu']
+            shop = my_source.prompt['shop']
+            messages.append({'role': 'system', 'content': f'現在是{d},你是一個{shop}的店員,只會使用繁體中文,專門負責幫客人點餐,並檢查是否有提到訂購人的電話跟姓名稱謂,以及確認訂購人是否需要外送,如需外送,需請訂購人提供外送地址,菜單如下:{menu}'})
 
             db = SQLiteHelper('linebotxgpt.db')
             db.execute_query('INSERT INTO bot_memory (role,content,line_id) VALUES (?,?,?)', ('user', message_text, get_key(event_source)))
