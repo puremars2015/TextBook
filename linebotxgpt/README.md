@@ -16,8 +16,8 @@ search_results = bing_search("勞動部建議月薪", num_results=5)
 
 我們會需要把上述這兩個方法複製到gpt_helper
 
-## Step2
-複製過去之後
+## Step2 複製過去之後,我們要修改一下
+
 ### 第一步 需要安裝套件
 ### 第二步 需要縮排
 ### 第三步 bing_search這個方法的參數要改成
@@ -54,3 +54,8 @@ def fetch_additional_content(self, url):
         print(rm)
         return rm
 ```
+
+
+## 附註 安裝套件
+pip install bs4
+pip install requests
