@@ -247,7 +247,7 @@ class MyGPT:
 
         results = []
         for idx, item in enumerate(soup.find_all('li', class_='b_algo')):
-            print(f"Processing result {idx + 1}...")
+            # print(f"Processing result {idx + 1}...")
             title = item.find('h2').text
             link = item.find('a')['href']
 
@@ -272,7 +272,5 @@ class MyGPT:
                 'description': description,
                 'additional_content': additional_content
             })
-
-            # time.sleep(2)
 
         return results
