@@ -19,17 +19,25 @@ search_results = bing_search("勞動部建議月薪", num_results=5)
 ## Step2 複製過去之後,我們要修改一下
 
 ### 第一步 需要安裝套件
+pip install bs4
+pip install requests
+
 ### 第二步 需要縮排
+
 ### 第三步 bing_search這個方法的參數要改成
 ```
 def bing_search(self, query, num_results=5):
 ```
+
 ### 第四步 fetch_additional_content這個方法的參數要改成
 ```
 def fetch_additional_content(self, url):
 ```
 
 ### 第五步 bing_search這個方法裡面呼叫的時候,要改成用self呼叫
+```
+additional_content = self.fetch_additional_content(link)
+```
 
 ### 第六步 修改原先的QueryGPT的方法,加入爬蟲的部分
 ```
@@ -54,8 +62,3 @@ def fetch_additional_content(self, url):
         print(rm)
         return rm
 ```
-
-
-## 附註 安裝套件
-pip install bs4
-pip install requests
