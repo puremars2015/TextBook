@@ -23,6 +23,10 @@ pip install bs4
 pip install requests
 
 ### 第二步 需要縮排
+一開始貼過去gpt_helper的時候,會發現縮排不對,要自己調整一下
+因為gpt_helper裡面的方法,都是在class裡面的方法,所以要縮排
+原先bing_search和fetch_additional_content這兩個方法是在demo_crawler裡面的方法,
+所以def是在最靠左邊,但是到了gpt_helper裡面,要縮排一個tab,才能在class裡面
 
 ### 第三步 bing_search這個方法的參數要改成
 ```
@@ -62,3 +66,12 @@ additional_content = self.fetch_additional_content(link)
         print(rm)
         return rm
 ```
+
+相對於AskGPT,我們多了時間
+now = datetime.now()
+
+多了爬蟲的部分
+queryResult = self.bing_search(msg)
+
+將資料一併傳入GPT-3
+{"role": "user", "content": f"{queryResult}"},

@@ -48,11 +48,14 @@ class MyGPT:
         return completion.choices[0].message.content
     
     def QueryGPT(self, msg) -> str:
+
+        # 取得現在時間
         now = datetime.now()
 
         # 使用爬蟲來查詢相關資訊
         queryResult = self.bing_search(msg)
 
+        # 呼叫openai api
         completion = self.openai.chat.completions.create(
             model=self.__model__,
             messages=[
@@ -205,7 +208,7 @@ class MyGPT:
    
     def RetrieveFineTune(self, fine_tune_id) -> str:
         return self.openai.fine_tuning.jobs.retrieve(fine_tune_id)
-
+    
     def fetch_additional_content(self, url):
         """從第一筆資料的連結抓取更多詳細內容。"""
         try:
