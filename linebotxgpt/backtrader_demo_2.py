@@ -1,9 +1,12 @@
 import backtrader as bt
 import yfinance as yf
-
+import matplotlib.pyplot as plt  # 匯入 matplotlib
 
 # 定義 MACD 策略
 class MACDStrategy(bt.Strategy):
+
+    xt = 0
+
     params = (
         ('macd1', 12),  # 短期均線
         ('macd2', 26),  # 長期均線
@@ -11,49 +14,38 @@ class MACDStrategy(bt.Strategy):
     )
 
     def __init__(self):
-        # 初始化 MACD 指標
         self.macd = bt.indicators.MACD(
             self.data.close,
             period_me1=self.params.macd1,
             period_me2=self.params.macd2,
             period_signal=self.params.signal
         )
-
-        # 定義 MACD 的交叉信號
         self.crossover = bt.indicators.CrossOver(self.macd.macd, self.macd.signal)
-
-        # 初始化訂單變量
         self.order = None
+        self.trade_dates = []  # 紀錄每次交易的日期與價格
 
     def next(self):
-        # 當 MACD 線上穿信號線時，生成買入信號
+        self.xt += 1
+        trade_date = self.data.datetime.date(0)
+        print(f"xt: {self.xt} {trade_date}")
         if self.crossover > 0:
             if not self.position:
-                self.order = self.buy(size=20)
-                # print(f"BUY at {self.data.datetime.date(0)} price: {self.data.close[0]}")
+                self.order = self.buy(size=1)
+                self.trade_dates.append((trade_date, self.data.close[0], 'BUY'))
 
-        # 當 MACD 線下穿信號線時，生成賣出信號
         elif self.crossover < 0:
             if self.position:
-                self.order = self.sell(size=20)
-                # print(f"SELL at {self.data.datetime.date(0)} price: {self.data.close[0]}")
+                self.order = self.sell(size=1)
+                self.trade_dates.append((trade_date, self.data.close[0], 'SELL'))
 
     def notify_order(self, order):
         if order.status in [order.Completed]:
             if order.isbuy():
-                print(f"BUY EXECUTED at {order.executed.price}")
+                print(f"BUY EXECUTED at {order.executed.price} on {self.data.datetime.date(0)}")
             elif order.issell():
-                print(f"SELL EXECUTED at {order.executed.price}")
-
-            # 打印當前持倉數量
+                print(f"SELL EXECUTED at {order.executed.price} on {self.data.datetime.date(0)}")
             print(f"Current Position Size: {self.position.size}")
-            # 打印當前資金總值
             print(f"Current Portfolio Value: {self.broker.getvalue()}")
-
-        # 清除訂單狀態
-        self.order = None
-
-# 創建回測環境
 
 # 自定義 Feed 來整合 yfinance 資料
 class YahooFinanceData(bt.feeds.PandasData):
@@ -67,31 +59,32 @@ class YahooFinanceData(bt.feeds.PandasData):
 
 # 下載數據
 data = yf.download('^TWII', start='2024-01-01', end='2024-10-01')
-
-# 將數據保存到 CSV 檔案
-data.to_csv('twii_data.csv')
-
-# 將數據轉換成 backtrader 可以使用的格式
 data_feed = YahooFinanceData(dataname=data)
 
 # 設置 backtrader
 cerebro = bt.Cerebro()
 cerebro.adddata(data_feed)
-
-# 這裡添加策略、設置資金等
 cerebro.addstrategy(MACDStrategy)
-
-# 設定初始資金
 cerebro.broker.setcash(5000)
-
-# 設置槓桿和保證金
-cerebro.broker.setcommission(leverage=5, margin=0.2, commission=1)  # 槓桿 10 倍，保證金 20%，手續費 0.1%
+cerebro.broker.setcommission(leverage=5, margin=0.2, commission=1)
 
 # 執行回測
 print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
-cerebro.run()
+strategies = cerebro.run()
 print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
+# 繪製回測結果
+fig = cerebro.plot(iplot=False)[0][0]
 
-# 繪製結果
-cerebro.plot()
+# 顯示每次交易的符號和日期
+strategy = strategies[0]
+for trade_date, price, action in strategy.trade_dates:
+    plt.text(trade_date, price, f'{action}\n{trade_date}', 
+             fontsize=8, ha='center', va='bottom', 
+             bbox=dict(facecolor='white', alpha=0.7))
+
+# 調整日期格式
+fig.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter('%Y-%m-%d'))
+fig.autofmt_xdate()  # 自動調整日期標籤的角度
+
+plt.show()

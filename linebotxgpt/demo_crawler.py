@@ -30,7 +30,7 @@ def fetch_additional_content(url):
         print(f"Error fetching additional content from {url}: {e}")
         return "Error fetching content."
 
-def bing_search(query, num_results=10):
+def bing_search(query, num_results=3):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
     }
@@ -71,7 +71,7 @@ def bing_search(query, num_results=10):
     return results
 
 # 測試搜尋
-search_results = bing_search("勞動部建議月薪", num_results=5)
+search_results = bing_search("今天颱風", num_results=3)
 for result in search_results:
     print(f"Title: {result['title']}\nLink: {result['link']}\n"
           f"Description: {result['description']}\n"
