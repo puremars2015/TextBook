@@ -19,14 +19,24 @@
 </head>
 
 <body>
+    <script>
+        function submitSurvey() {
+
+        }
+    </script>
 
     <div style="width: auto; display: flex;">
+
+
         <div style="width: 50%;">
-            <img style="width: 600px;" src="https://s.yimg.com/zp/MerchandiseImages/18B87887AC-Gd-11250836.jpg">
+            <div>
+                <img style="width: 300px;" src="https://s.yimg.com/zp/MerchandiseImages/18B87887AC-Gd-11250836.jpg">
+            </div>
         </div>
+
         <div style="width: 50%;">
 
-            <h1 style="color: rgb(102, 67, 119);">主標題:顧客問卷調查</h1>
+            <h1 id="title01" style="color: rgb(102, 67, 119);">主標題:顧客問卷調查</h1>
 
             <h3 style="color: blueviolet;">副標題:當然就是練習而已瞜...</h3>
 
@@ -55,10 +65,13 @@
                     <input type="radio" name="serumOpinion" value="notEffective">無效
                 </div>
             </div>
+
+
+            <button onclick="submitSurvey()">提交問卷</button>
         </div>
+
+
     </div>
-
-
 
 
 
