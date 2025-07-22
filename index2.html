@@ -44,13 +44,19 @@
 <body>
     <script>
         function submitSurvey() {
-            var colors = ["red", "green", "blue", "yellow", "purple"];
-
-            var doc = document.getElementById("title01");
-
-            var location = colors.indexOf(doc.style.color);
-
-            doc.style.color = colors[(location + 1) % colors.length];
+            var radios = document.getElementsByName("order");
+            var selected = "";
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    selected = radios[i].value;
+                    break;
+                }
+            }
+            if (selected) {
+                alert("你選擇的是: " + selected);
+            } else {
+                alert("請選擇一個飲料");
+            }
         }
 
         function changeText() {
@@ -65,6 +71,8 @@
     </script>
 
     <div>
+
+
 
         <h1 id="title01" style="color: rgb(102, 67, 119);">五十嵐訂單</h1>
 
