@@ -21,7 +21,14 @@
 <body>
     <script>
         function submitSurvey() {
-            alert("感謝您的參與！問卷已提交。");
+            var colors = ["red", "green", "blue", "yellow", "purple"];
+
+            var doc = document.getElementById("title01");
+
+            var location = colors.indexOf(doc.style.color);
+
+            doc.style.color = colors[(location + 1) % colors.length];
+
         }
     </script>
 
