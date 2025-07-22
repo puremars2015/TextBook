@@ -54,6 +54,7 @@
             }
             if (selected) {
                 alert("你選擇的是: " + selected);
+                console.log({"drink": selected, "name": document.getElementById("yourname").value});
             } else {
                 alert("請選擇一個飲料");
             }
@@ -76,7 +77,8 @@
 
         <h1 id="title01" style="color: rgb(102, 67, 119);">五十嵐訂單</h1>
 
-        <h3 style="color: blueviolet;">記得寫名字</h3>
+        <h3 style="color: blueviolet;">記得寫名字 </h3>
+        <h3 style="color: blueviolet;">姓名:<input id="yourname" type="text"></h3>
 
 
         <div style="display: flex;">
