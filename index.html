@@ -30,6 +30,16 @@
             doc.style.color = colors[(location + 1) % colors.length];
 
         }
+
+        function changeText() {
+            var doc = document.getElementById("title01");
+
+            if (doc.innerText === "主標題:顧客問卷調查 - 變更後的標題") {
+                doc.innerText = "主標題:顧客問卷調查";
+            } else {
+                doc.innerText = "主標題:顧客問卷調查 - 變更後的標題";
+            }        
+        }
     </script>
 
     <div style="width: auto; display: flex;">
@@ -75,6 +85,7 @@
 
 
             <button onclick="submitSurvey()">提交問卷</button>
+            <button onclick="changeText()">變換文字</button>
         </div>
 
 
