@@ -1,0 +1,97 @@
+<html>
+
+<head>
+    <title>前端網頁學習之旅</title>
+    <style>
+        div {
+            color: royalblue;
+        }
+
+        .question-label {
+            color: darkred;
+            /* 調整文字顏色 */
+        }
+
+        #question-two {
+            color: #202091;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function submitSurvey() {
+            var colors = ["red", "green", "blue", "yellow", "purple"];
+
+            var doc = document.getElementById("title01");
+
+            var location = colors.indexOf(doc.style.color);
+
+            doc.style.color = colors[(location + 1) % colors.length];
+        }
+
+        function changeText() {
+            var doc = document.getElementById("title01");
+
+            if (doc.innerText === "主標題:顧客問卷調查 - 變更後的標題") {
+                doc.innerText = "主標題:顧客問卷調查";
+            } else {
+                doc.innerText = "主標題:顧客問卷調查 - 變更後的標題";
+            }        
+        }
+    </script>
+
+    <div style="width: auto; display: flex;">
+
+
+        <div style="width: 50%;">
+            <div>
+                <img style="width: 300px;" src="https://s.yimg.com/zp/MerchandiseImages/18B87887AC-Gd-11250836.jpg">
+            </div>
+        </div>
+
+        <div style="width: 50%;">
+
+            <h1 id="title01" style="color: rgb(102, 67, 119);">主標題:顧客問卷調查</h1>
+
+            <h3 style="color: blueviolet;">副標題:當然就是練習而已瞜...</h3>
+
+            <div>
+                <div style="background-color: antiquewhite;">
+                    <label class="question-label">問題一</label>
+                </div>
+                <div style="background-color: #E6E6FA;">
+                    <label class="question-label">請問您聽過小棕瓶嗎??</label>
+                </div>
+                <div>
+                    <input type="radio" name="heardAbout" value="yes">是
+                    <input type="radio" name="heardAbout" value="no">否
+                </div>
+            </div>
+
+            <div>
+                <div style="background-color: antiquewhite;">
+                    <label id="question-two" class="question-label">問題二</label>
+                </div>
+                <div style="background-color: #E6E6FA;">
+                    <label class="question-label">請問您對精華液的使用看法是有效還是沒有??</label>
+                </div>
+                <div>
+                    <input type="radio" name="serumOpinion" value="effective">有效
+                    <input type="radio" name="serumOpinion" value="notEffective">無效
+                </div>
+            </div>
+
+
+            <button onclick="submitSurvey()">提交問卷</button>
+            <button onclick="changeText()">變換文字</button>
+        </div>
+
+
+    </div>
+
+
+
+</body>
+
+</html>
