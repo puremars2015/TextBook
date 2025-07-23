@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>網頁實作練習,格式說明</title>       
+    <script>
+        /* 預先宣告的方法 */
+
+        function display() {
+            var inputValue = document.getElementById("input01").value;
+            document.getElementById("display-label").innerText = inputValue;
+        }
+    </script>
+    <style>
+        /* 套用到這一頁的CSS樣式 */
+    </style>
+</head>
+
+<body>
+   
+    <div style="background-color: aquamarine;">
+        <div>
+            <label for="input01">Input 1:</label>
+            <input type="text" id="input01" value="這是預設值1">
+        </div>
+        <div>
+            <label for="input02">Input 2:</label>
+            <input type="text" id="input02" value="這是預設值2">
+        </div>
+    </div>
+    <div>
+        display:
+        <div>
+            <label id="display-label"></label>
+        </div>
+    </div>
+    <div>
+        <button onclick="display()">變更顯示</button>
+    </div>
+
+
+
+    <script>
+
+        /* 在這裡撰寫,需要先確定出現在畫面的元素的操作用javascript程式碼 */
+
+
+
+
+       
+            
+
+
+    </script>
+</body>
+
+</html>
