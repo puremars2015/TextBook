@@ -55,7 +55,23 @@
             }
             if (selected) {
                 alert("你選擇的是: " + selected);
-                console.log({"drink": selected, "name": document.getElementById("yourname").value});
+                console.log({ "drink": selected, "name": document.getElementById("yourname").value });
+
+                fetch('http://localhost:5000/api/order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "drink": selected, "name": document.getElementById("yourname").value })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        console.error('錯誤:', error);
+                        document.getElementById('result').textContent = '發生錯誤: ' + error.message;
+                    });
             } else {
                 alert("請選擇一個飲料");
             }
