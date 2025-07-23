@@ -1,15 +1,16 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import json
 
 app = Flask(__name__)
-CORS(app)  # 啟用 CORS，允許跨域請求
+# 完全簡化的 CORS 設置
+CORS(app, supports_credentials=True)  # 使用默認配置並支援憑證
 
 @app.route('/')
 def index():
     return "飲料訂單 API 服務運行中..."
 
-@app.route('/api/order', methods=['POST'])
+@app.route('/api/order', methods=['POST', 'OPTIONS'])
 def receive_order():
     try:
         # 從請求中獲取 JSON 數據
@@ -26,7 +27,12 @@ def receive_order():
         name = order_data.get('name')
         
         # 這裡可以添加訂單處理邏輯，例如保存到數據庫
+
+        print(f"收到訂單: {name} 訂購了 {drink}")
         
+        # Log the order details for debugging
+        app.logger.info(f"Order received - Name: {name}, Drink: {drink}")
+
         # 返回成功響應
         return jsonify({
             'success': True,
