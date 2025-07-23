@@ -27,9 +27,13 @@
         function showMessage() {      
             for(var i = 2; i < 10; i=i+1) {
                 for(var j = 2; j < 10; j=j+1) {
-                    console.log(i + " * " + j + " = " + (i * j));
+                    myConsoleLog(i + " * " + j + " = " + (i * j));
                 }
             }    
+        }
+
+        function myConsoleLog(message) {
+            console.log("這是我的console log訊息  " + message);
         }
     </script>
 </body>
