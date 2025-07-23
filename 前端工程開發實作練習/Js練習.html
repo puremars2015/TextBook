@@ -8,9 +8,28 @@
 <body>
     <button onclick="showMessage()">測試</button>
     <script>
+
+        var 變數1 = "這是變數1";    
+
+        var 變數2 = "這是變數2";
+
+        var 變數3 = 0.5;
+
+        var 變數4 = 0.2;
+
+        var 預計印出的內容 ="";
+
+        if (變數3 > 變數4) {
+            預計印出的內容 = "變數3大於變數4";
+        } else if (變數3 < 變數4) {
+            預計印出的內容 = "變數3小於變數4";
+        } else {
+            預計印出的內容 = "變數3等於變數4";
+        }
+
         // 在這裡撰寫你的JavaScript程式碼
         function showMessage() {
-            alert("Hello, Javascript!");
+            alert(預計印出的內容);
         }
     </script>
 </body>
