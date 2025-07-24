@@ -31,11 +31,41 @@
     <style>
         /* 套用到這一頁的CSS樣式 */
 
-        /*對於整個頁面的div元素,設定邊框,並使div的元素周圍向外有10px的間距,向內有10px的間距*/
+        /* 對於整個頁面的div元素,設定邊框,並使div的元素周圍向外有10px的間距,向內有10px的間距 */
         div {
             margin: 10px;
             padding: 10px;
             border: 1px solid #ccc;
+        }
+
+        #input01 {
+            /* 這裡可以針對特定id的元素設定樣式 */
+            font-size: 36px;
+        }
+
+        #display-label {
+            /* 這裡可以針對特定id的元素設定樣式 */
+            font-size: 100px;
+            font-weight: bold;
+        }
+
+        button {
+            /* 按鈕的樣式 */
+            font-size: 24px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #4CAF50; /* 綠色背景 */
+            color: white; /* 白色文字 */
+        }
+
+        .title-text {
+            /* 標題文字的樣式 */
+            font-weight: bold;
+            color: #3333339c; /* 深灰色文字 */
+        }
+
+        .pink-background {
+            background-color: pink;
         }
     </style>
 </head>
@@ -43,6 +73,10 @@
 <!-- 網頁的主要內容放這邊,也就是真正顯示在瀏覽器上的部份。 -->
 <body>
    
+    <h1 class="title-text pink-background">網頁實作練習,格式說明</h1>
+
+    <p class="title-text pink-background">這是一個簡單的網頁實作練習範例,包含了基本的HTML結構,CSS樣式以及JavaScript互動功能。</p>
+
     <div>
         <input type="text" id="input01" placeholder="請輸入文字" value="這是預設值1">
     </div>
@@ -52,8 +86,8 @@
 
     <div>
         <label for="display-label">顯示區域:</label>
-        <div>
-            <label style="font-size: 50px;" id="display-label"></label>
+        <div class="pink-background">
+            <label id="display-label"></label>
         </div>
     </div>
 
