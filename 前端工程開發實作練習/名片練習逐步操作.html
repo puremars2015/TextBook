@@ -5,15 +5,99 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>我的個人名片</title>
   
+  <style>
+    body {
+        background-color: rgb(246, 221, 225);
+    }
+
+
+    .small-img {
+        width: 130px;
+        height: auto;
+    }
+
+    .radius {
+        border-radius: 50%;
+    }
+
+    .card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 30px;
+        width: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* background-color: aquamarine; */
+        text-align: center;
+        margin: 10% auto; /* 使名片居中 */
+    }
+
+    /* @media screen and (max-width: 430px) {
+        .card {
+            width: 90%;
+            padding: 20px;
+            background-color: blanchedalmond;
+        }
+        
+    } */
+
+    #my-name {
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    button {
+        cursor: pointer;
+        padding: 7px 10px;
+        background-color: #007bff; /* 綠色背景 */
+        color: white; /* 白色文字 */
+        border: none;
+        border-radius: 5px;
+    }
+
+    .description {
+        margin-top: 30px;
+    }
+
+    .description-line {
+        margin-top: 7px;
+    }
+
+    .button-space {
+        margin: 0px 10px;
+    }
+  </style>
 </head>
+
 <body>
     <!-- 背景 -->
     <div>
-        
-        <div>
-
+        <!-- 名片的部分 -->
+        <div class="card">
+            <!-- 照片區塊 -->
+            <div>
+                <img class="small-img radius" src="https://tse2.mm.bing.net/th/id/OIP.OlS4mqp5BuD8iy_wJcIZ0gHaHa?pid=Api&P=0&h=180" alt="個人照片">
+            </div>
+            <!-- 文字描述的區塊 -->
+            <div class="description">
+                <div id="my-name" class="description-line">
+                    <label>陳小明</label>
+                </div>
+                <div class="description-line">
+                    <label>熱愛網頁設計的新手</label>
+                </div>
+                <div class="description-line">
+                    <label>Email: example@email.com</label>
+                </div>
+                <div class="description-line">
+                    <label>電話: 0912-345-678</label>
+                </div>
+            </div>
+            <!-- button的區塊 -->
+            <div class="description-line">
+                <button class="button-space">GitHub</button>
+                <button class="button-space">LinkedIn</button>
+            </div>
         </div>
     </div>
-
 </body>
 </html>
