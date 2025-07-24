@@ -6,10 +6,17 @@
   <title>我的個人名片</title>
   
   <style>
+
+    * {
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+    }
+
     body {
         background-color: rgb(249, 158, 174);
     }
-
+    
     @media screen and (max-width: 1100px) {
         body {
             background-color: rgb(242, 175, 123);
@@ -45,21 +52,73 @@
             background-color: rgb(175, 176, 240);
         }    
     }
+
+    .red {
+        background-color: red;
+    }
+
+    .green {
+        background-color: green;
+    }
+
+    .blue {
+        background-color: blue;
+    }
+
+    .yellow {
+        background-color: yellow;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .box {
+        width: 25%;
+        height: 300px;
+    }
+
+    div {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    @media screen and (max-width: 1200px) {
+        .row {
+            flex-wrap: wrap;
+        }
+        .box {
+            flex: 0 0 50%;
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        .row {
+            flex-wrap: wrap;
+        }
+        .box {
+            flex: 0 0 100%;
+        }
+    }
+
+
   </style>
 </head>
 
 <body>
-    <p>這是我的個人名片</p>
-    <h2>GPT時代頌</h2>
-    <p>
-      智慧如潮湧現前，<br>
-      機器學習破曉天。<br>
-      問答之間知識現，<br>
-      萬象皆在指尖間。<br>
-      GPT時代新紀元，<br>
-      人機共創展宏篇。<br>
-      創意無限心相連，<br>
-      未來世界更燦然。
-    </p>
+    <div class="row">
+        <div class="card red box">
+
+        </div>
+        <div class="card green box">
+
+        </div>
+        <div class="card blue box">
+
+        </div>
+        <div class="card yellow box">
+
+        </div>
+    </div>
 </body>
 </html>
