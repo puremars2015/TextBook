@@ -27,14 +27,47 @@
             align-items: center;
         }
 
-        .main{
-           
-        }
+        .main {}
 
-        h1, h2, h3, .title {
+        h1,
+        h2,
+        h3,
+        .title {
             font-family: "LXGW WenKai TC", cursive;
             font-weight: 400;
             font-style: normal;
+            font-size: 3.5rem;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid black;
+            /* 游標 */
+            width: 0;
+            animation:
+                typing 3s steps(15, end) forwards,
+                /* 打字動畫 */
+                blink-caret 0.8s step-end infinite;
+            /* 閃爍游標 */
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 15ch;
+            }
+
+            /* 依文字長度調整 */
+        }
+
+        @keyframes blink-caret {
+            50% {
+                border-color: transparent;
+            }
         }
     </style>
 </head>
@@ -49,12 +82,8 @@
                     <!-- 左側敘述文字 -->
                     <div class="col-6">
                         <!-- 標題Creative Designer -->
-                        <div class="mb-5 text-center">
-                            <h1>
-                                <span class="typed display-4">專業的投資顧問</span>
-                                <span class="typed display-4" data-typed-items="投資顧問, 理財專家, 經濟學家"></span>
-                            </h1>
-                        
+                        <div class="mb-5 text-center title">
+                             <span class="mb-3 text-primary">專業的</span> <span class="typewriter text-success"></span>
                         </div>
                         <!-- 說明 -->
                         <div class="m-5 text-muted fst-italic small">
@@ -102,17 +131,23 @@
                         <div class="m-5">
                             <div class="btn-group">
                                 <div class="d-flex justify-content-center gap-3">
-                                    <a href="https://twitter.com/sean" target="_blank" class="rounded-circle border p-2">
-                                        <img src="https://img.icons8.com/ios-filled/30/000000/twitter.png" alt="Twitter">
+                                    <a href="https://twitter.com/sean" target="_blank"
+                                        class="rounded-circle border p-2">
+                                        <img src="https://img.icons8.com/ios-filled/30/000000/twitter.png"
+                                            alt="Twitter">
                                     </a>
-                                    <a href="https://www.linkedin.com/in/sean" target="_blank" class="rounded-circle border p-2">
-                                        <img src="https://img.icons8.com/ios-filled/30/000000/linkedin.png" alt="LinkedIn">
+                                    <a href="https://www.linkedin.com/in/sean" target="_blank"
+                                        class="rounded-circle border p-2">
+                                        <img src="https://img.icons8.com/ios-filled/30/000000/linkedin.png"
+                                            alt="LinkedIn">
                                     </a>
                                     <a href="https://github.com/sean" target="_blank" class="rounded-circle border p-2">
                                         <img src="https://img.icons8.com/ios-filled/30/000000/github.png" alt="GitHub">
                                     </a>
-                                    <a href="https://www.instagram.com/sean" target="_blank" class="rounded-circle border p-2">
-                                        <img src="https://img.icons8.com/ios-filled/30/000000/instagram-new.png" alt="Instagram">
+                                    <a href="https://www.instagram.com/sean" target="_blank"
+                                        class="rounded-circle border p-2">
+                                        <img src="https://img.icons8.com/ios-filled/30/000000/instagram-new.png"
+                                            alt="Instagram">
                                     </a>
                                 </div>
                             </div>
@@ -137,6 +172,34 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
         crossorigin="anonymous"></script>
+
+    <script>
+        const typedItems = ["投資顧問", "理財專家", "經濟學家"];
+        const typewriterElement = document.querySelector(".typewriter");
+        let index = 0;
+
+        function typeEffect(text, callback) {
+            let i = 0;
+            typewriterElement.textContent = "";
+            const interval = setInterval(() => {
+                typewriterElement.textContent += text[i];
+                i++;
+                if (i === text.length) {
+                    clearInterval(interval);
+                    setTimeout(callback, 1000); // Pause before switching
+                }
+            }, 150); // Typing speed
+        }
+
+        function startTyping() {
+            typeEffect(typedItems[index], () => {
+                index = (index + 1) % typedItems.length;
+                startTyping();
+            });
+        }
+
+        startTyping();
+    </script>
 </body>
 
 </html>
