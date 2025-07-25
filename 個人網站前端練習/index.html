@@ -41,10 +41,13 @@
 
         .typewriter {
             overflow: hidden;
+            /* 文字溢出隱藏 */
             white-space: nowrap;
+            /* 不換行 */
             border-right: 2px solid black;
             /* 游標 */
             width: 0;
+            /* 初始寬度為0 */
             animation:
                 typing 3s steps(15, end) forwards,
                 /* 打字動畫 */
@@ -64,10 +67,35 @@
             /* 依文字長度調整 */
         }
 
+        /* 游標閃爍頻率 */
         @keyframes blink-caret {
             50% {
                 border-color: transparent;
             }
+        }
+
+        #shadow-blue {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 400px;
+            height: 600px;
+            background-color: rgb(30, 106, 194);
+            z-index: -1;
+        }
+
+        .hero::before,
+        .about::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://bootstrapmade.com/content/demo/Style/assets/img/bg/abstract-bg-1.webp') no-repeat center center;
+            background-size: cover;
+            opacity: 0.08;
+            z-index: 1;
         }
     </style>
 </head>
@@ -83,7 +111,7 @@
                     <div class="col-6">
                         <!-- 標題Creative Designer -->
                         <div class="mb-5 text-center title">
-                             <span class="mb-3 text-primary">專業的</span> <span class="typewriter text-success"></span>
+                            <span class="mb-3 text-primary">專業的</span> <span class="typewriter text-success"></span>
                         </div>
                         <!-- 說明 -->
                         <div class="m-5 text-muted fst-italic small">
@@ -155,10 +183,31 @@
                     </div>
                     <!-- 右側照片 -->
                     <div class="col-6">
-                        <div>
+                        <div style="position: relative;">
                             <img
                                 src="https://img.freepik.com/free-photo/serious-businessman-with-crossed-arms_1098-3018.jpg?t=st=1753411514~exp=1753415114~hmac=480265f8b7cc3ff7ca0796cd17f719c49eebb5f09657796c2f1b3e2c17b03f97&w=400">
+
+                            <div id="shadow-blue"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about section">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <label>關於我</label>
+                            <p>一個熱愛學習和分享的投資顧問，專注於幫助客戶實現財務自由。</p>
+                        </div>
+                        <div>
+                            
+                        </div>
+                    </div>
+                    <div class="col">
+
                     </div>
                 </div>
             </div>
