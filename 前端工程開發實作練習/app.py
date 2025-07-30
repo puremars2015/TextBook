@@ -12,6 +12,15 @@ def index():
 
 @app.route('/api/order', methods=['POST', 'OPTIONS'])
 def receive_order():
+
+    # 處理 OPTIONS 請求（預檢請求）
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'POST')
+        return response
+
     try:
         # 從請求中獲取 JSON 數據
         order_data = request.get_json()
@@ -47,4 +56,4 @@ def receive_order():
         }), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5900, host='0.0.0.0')
