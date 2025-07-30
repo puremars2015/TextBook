@@ -8,11 +8,17 @@
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         .w100h50 {
             width: 100%;
             height: 50%;
+        }
+
+        .w100h40 {
+            width: 100%;
+            height: 40%;
         }
 
         .description {
@@ -46,12 +52,36 @@
             position: absolute;
         }
 
+        .nav-link {
+            position: relative;
+            display: inline-block;
+            margin-top: 3vh;
+            font-size: 20px;
+            font-weight: bold;
+            padding-left: 10px;
+        }
+
+        .nav-link-first {
+            margin-left: 10px;
+        }
+
     </style>
 </head>
 
 <body>
+
+    <!-- 導覽列 -->
+    <div style="width: 100%; height:10%; padding-left:65%; background-color: lightblue; position:relative;">
+        <a href="homeRWD.html" class="nav-link nav-link-first" style="text-decoration: none; color: black;">Home</a>
+        <a href="aboutRWD.html" class="nav-link" style="text-decoration: none; color: black;">About</a>
+        <a href="contactRWD.html" class="nav-link" style="text-decoration: none; color: black;">Contact</a>
+        <a href="servicesRWD.html" class="nav-link" style="text-decoration: none; color: black;">Services</a>
+        <a href="portfolioRWD.html" class="nav-link" style="text-decoration: none; color: black;">Portfolio</a>
+    </div>
+
+
     <!-- part one -->
-    <div class="w100h50" style="background-color: lightcoral; position: relative;">
+    <div class="w100h40" style="background-color: lightcoral; position: relative;">
         <!-- 標題區塊 -->
         <div class="title-bar"></div>
     </div>
