@@ -1,0 +1,182 @@
+<html>
+
+<head>
+    <title>Home Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .w100h50 {
+            width: 100%;
+            height: 50%;
+            font-size: 0px;
+        }
+
+        .w100h40 {
+            width: 100%;
+            height: 40%;
+        }
+
+        .description {
+            width: 33.3%;
+            height: 100%;
+            display: inline-block;
+            position: relative;
+        }
+
+
+
+        .son {
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background-color: rgba(255, 255, 255, 0.5);
+            position: absolute;
+        }
+
+        @media screen and (max-width: 1200px) {
+
+            .w100h50 {
+                height: 150%;
+            }
+
+            .description {
+                width: 100%;
+                height: 33.3%;
+            }
+        }
+
+        .title-bar {
+            top: 35%;
+            left: 10%;
+            width: 80%;
+            height: 30%;
+            background-color: rgb(128, 240, 128);
+            position: absolute;
+        }
+
+        .nav-link {
+            position: relative;
+            display: inline-block;
+            margin-top: 3vh;
+            font-size: 20px;
+            font-weight: bold;
+            padding-left: 10px;
+        }
+
+        .nav-link-menu {
+            display: none;
+        }
+
+        .nav-link-first {
+            margin-left: 10px;
+        }
+
+        .nav-mask-link {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            display: block;
+            text-decoration: none;
+            margin-top: 6vh;
+        }
+
+        .nav-mask-first {
+            margin-top: 20vh;
+        }
+
+        .page2-description {
+            width: 50%;
+            height: 100%;
+            background-color: lightgreen;
+            display: inline-block;
+            position: relative;
+        }
+
+        @media screen and (max-width: 1200px) {
+            .page2-description {
+                width: 100%;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .nav-link-menu {
+                position: relative;
+                display: inline-block;
+                margin-top: 3vh;
+                font-size: 30px;
+                font-weight: bold;
+                padding-left: 22vw;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            document.getElementById("mask").style.display =
+                document.getElementById("mask").style.display === "block" ? "none" : "block";
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- 遮罩層 -->
+    <div id="mask"
+        style="width: 100%; height: 100%; background-color: rgba(43, 8, 8, 0.806); position: absolute; top: 0; left: 0; z-index: 10; text-align: center; display: none;">
+        <a onclick="toggleMenu()" style="color: white; font-size: 40px; text-decoration: none; left:84vw; top:2vh; position: absolute;"><i
+                class="fa-solid fa-xmark"></i></a>
+        <a href="#" class="nav-mask-link nav-mask-first">Home</a>
+        <a href="#" class="nav-mask-link">About</a>
+        <a href="#" class="nav-mask-link">Contact</a>
+        <a href="#" class="nav-mask-link">Services</a>
+        <a href="#" class="nav-mask-link">Portfolio</a>
+    </div>
+
+    <!-- 導覽列 -->
+    <div style="width: 100%; height:10%; padding-left:65%; background-color: lightblue; position:relative;">
+        <a href="#" class="nav-link nav-link-first" style="text-decoration: none; color: black;">Home</a>
+        <a href="#" class="nav-link" style="text-decoration: none; color: black;">About</a>
+        <a href="#" class="nav-link" style="text-decoration: none; color: black;">Contact</a>
+        <a href="#" class="nav-link" style="text-decoration: none; color: black;">Services</a>
+        <a href="#" class="nav-link" style="text-decoration: none; color: black;">Portfolio</a>
+        <a class="nav-link-menu" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></a>
+
+    </div>
+
+
+    <!-- part one -->
+    <div class="w100h40" style="background-color: lightcoral; position: relative;">
+        <!-- 標題區塊 -->
+        <div class="title-bar"></div>
+    </div>
+    <div class="w100h50">
+        <div class="description" style="background-color: rgb(240, 175, 128);">
+            <div class="son"></div>
+        </div>
+        <div class="description" style="background-color: rgb(154, 240, 128);">
+            <div class="son"></div>
+        </div>
+        <div class="description" style="background-color: rgb(229, 240, 128);">
+            <div class="son"></div>
+        </div>
+    </div>
+
+
+    <!-- part two -->
+    <div style="width:100%; height:100%; background-color: lightblue; font-size: 0px;">
+        <div class="page2-description"></div>
+        <div class="page2-description" style="background-color: lightcoral;"></div>
+    </div>
+
+</body>
+
+</html>

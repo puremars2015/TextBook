@@ -1,0 +1,510 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>前端網頁學習之旅</title>
+    <style>
+        div {
+            color: royalblue;
+        }
+
+        .question-label {
+            color: darkred;
+            /* 調整文字顏色 */
+        }
+
+        #question-two {
+            color: #202091;
+        }
+
+        .drink-option {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 10px;
+        }
+
+        .drink-name {
+            flex: 1;
+        }
+
+        .drink-selected {
+            width: 30px;
+            text-align: right;
+        }
+
+        .drink-banner {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function submitSurvey() {
+            var radios = document.getElementsByName("order");
+            var selected = "";
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    selected = radios[i].value;
+                    break;
+                }
+            }
+            if (selected) {
+                alert("你選擇的是: " + selected);
+                console.log({ "drink": selected, "name": document.getElementById("yourname").value });
+
+                fetch('http://127.0.0.1:5900/api/order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "drink": selected, "name": document.getElementById("yourname").value })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        console.error('錯誤:', error);
+                        document.getElementById('result').innerText = '發生錯誤: ' + error.message;
+                    });
+            } else {
+                alert("請選擇一個飲料");
+            }
+        }
+
+
+    </script>
+
+    <div>
+
+
+
+        <h1 id="title01" style="color: rgb(102, 67, 119);">五十嵐訂單</h1>
+
+        <h3 style="color: blueviolet;">記得寫名字 </h3>
+        <h3 style="color: blueviolet;">姓名:<input id="yourname" type="text"></h3>
+
+
+        <div style="display: flex;">
+            <!-- 左邊 -->
+            <div style="width: 50%;">
+                <!-- 上面 -->
+                <div>
+                    <div class="drink-banner">
+                        <div class="drink-name">
+                            <label>找好茶</label>
+                        </div>
+                    </div>
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>茉莉綠茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="茉莉綠茶">
+                        </div>
+                    </div>
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>阿薩姆紅茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="阿薩姆紅茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>四季春青茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="四季春青茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>黃金烏龍</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="黃金烏龍">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>波霸紅</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="波霸紅茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>微檸檬清</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="微檸檬清">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>檸檬綠</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="檸檬綠">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>梅子綠</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="梅子綠">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>8冰綠</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="8冰綠">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>多多綠</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="多多綠">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>旺來紅</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="旺來紅">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>柚子紅</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="柚子紅">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>鮮柚綠</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="鮮柚綠">
+                        </div>
+                    </div>
+                </div>
+                <!-- 下面 -->
+                <div>
+
+                    <div class="drink-banner">
+                        <div class="drink-name">
+                            <label>找奶茶</label>
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>奶茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="奶茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>奶綠</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="奶綠">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>烏龍奶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="烏龍奶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>珍珠奶茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="珍珠奶茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>波霸奶茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="波霸奶茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>燕麥奶茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="燕麥奶茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>阿華田</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="阿華田">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 右邊 -->
+            <div style="width: 50%;">
+                <!-- 上面 -->
+                <div>
+                    <div class="drink-banner">
+                        <div class="drink-name">
+                            <label>找拿鐵</label>
+                        </div>
+                    </div>
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>紅茶拿鐵</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="紅茶拿鐵">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>重焙烏龍拿鐵</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="重焙烏龍拿鐵">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>珍珠紅茶拿鐵</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="珍珠紅茶拿鐵">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>波霸紅茶拿鐵</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="波霸紅茶拿鐵">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>燕麥紅茶拿鐵</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="燕麥紅茶拿鐵">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>阿華田拿鐵</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="阿華田拿鐵">
+                        </div>
+                    </div>
+                </div>
+                <!-- 右邊中間 -->
+                <div>
+
+                    <div class="drink-banner">
+                        <div class="drink-name">
+                            <label>找新鮮</label>
+                        </div>
+                    </div>
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>8冰茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="8冰茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>柚子茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="柚子茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>檸檬汁</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="檸檬汁">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>葡萄柚汁</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="葡萄柚汁">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>金桔檸檬</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="金桔檸檬">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>檸檬梅汁</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="檸檬梅汁">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>檸檬多多</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="檸檬多多">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>葡萄柚多多</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="葡萄柚多多">
+                        </div>
+                    </div>
+                </div>
+                <!-- 下面 -->
+                <div>
+
+                    <div class="drink-banner">
+                        <div class="drink-name">
+                            <label>找冰淇淋</label>
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>冰淇淋紅茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="冰淇淋紅茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>芒果青</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="芒果青">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>荔枝烏龍</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="荔枝烏龍">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>冰淇淋奶茶</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="冰淇淋奶茶">
+                        </div>
+                    </div>
+
+                    <div class="drink-option">
+                        <div class="drink-name">
+                            <label>冰淇淋紅茶拿鐵</label>
+                        </div>
+                        <div class="drink-selected">
+                            <input type="radio" name="order" value="冰淇淋紅茶拿鐵">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <button onclick="submitSurvey()">提交問卷</button>
+    </div>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
