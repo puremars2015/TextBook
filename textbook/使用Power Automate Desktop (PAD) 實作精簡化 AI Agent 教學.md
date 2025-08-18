@@ -1,4 +1,4 @@
-# Power Automate Desktop (PAD) 教學手冊
+# 使用Power Automate Desktop (PAD) 實作精簡化 AI Agent 教學
 
 > 本教學聚焦「Power Automate for Desktop」(PAD) 桌面自動化，不再涵蓋雲端 Cloud Flow。內容以大量實務案例：Excel、Outlook、網頁資料擷取、迴圈 / 條件模式、OpenAI Web API 串接等，協助快速打造穩定 RPA。
 
