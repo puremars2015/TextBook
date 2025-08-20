@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>簡易音樂播放器</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .player {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .player h1 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: #444;
+    }
+
+    #playBtn {
+      font-size: 2rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      background: #6a11cb;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #status {
+      display: block;
+      margin-top: 1rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="player">
+    <h1>🎵 我的音樂播放器</h1>
+    <button id="playBtn">▶️ 播放</button>
+    <span id="status">尚未播放</span>
+    <audio id="audio" src="music.mp3"></audio>
+  </div>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const status = document.getElementById('status');
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸️ 暫停';
+        status.textContent = '播放中...';
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶️ 播放';
+        status.textContent = '已暫停';
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      playBtn.textContent = '▶️ 播放';
+      status.textContent = '播放完畢';
+    });
+  </script>
+</body>
+</html>

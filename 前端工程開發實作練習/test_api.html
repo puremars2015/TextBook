@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>飲料訂單 API 測試</title>
+    <script>
+        function sendOrder() {
+            const drinkValue = document.getElementById('drink').value;
+            const nameValue = document.getElementById('name').value;
+            
+            if (!drinkValue || !nameValue) {
+                alert('請填寫飲料和姓名');
+                return;
+            }
+            
+            const orderData = {
+                drink: drinkValue,
+                name: nameValue
+            };
+            
+            fetch('http://localhost:5000/api/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+                document.getElementById('result').textContent = '發生錯誤: ' + error.message;
+            });
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            padding: 8px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>飲料訂單 API 測試</h1>
+    
+    <div class="form-group">
+        <label for="drink">飲料:</label>
+        <input type="text" id="drink" placeholder="請輸入飲料名稱">
+    </div>
+    
+    <div class="form-group">
+        <label for="name">姓名:</label>
+        <input type="text" id="name" placeholder="請輸入您的姓名">
+    </div>
+    
+    <button onclick="sendOrder()">送出訂單</button>
+    
+    <h2>回應結果:</h2>
+    <pre id="result">尚未送出訂單</pre>
+</body>
+</html>

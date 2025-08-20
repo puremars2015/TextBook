@@ -1,0 +1,37 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Javascript練習2</title>       
+</head>
+
+<body>
+    <div id="display-area" style="display:flex">
+
+    </div>
+    <button onclick="showMessage()">測試</button>
+    <script>
+
+        var colors = ["red", "green", "blue", "yellow", "purple"];
+
+        // 在這裡撰寫你的JavaScript程式碼
+        function showMessage() {      
+            var innerHtml = "";
+            for(var i = 2; i < 10; i=i+1) {
+                innerHtml += "<div style='width:10%;'>";
+                for(var j = 2; j < 10; j=j+1) {
+
+                    let m = `<div style="color: ${colors[(i + j) % colors.length]}">
+                        ${i} * ${j} = ${i * j}
+                    </div>`
+                    innerHtml += m;
+                }
+                innerHtml += "</div>";
+                console.log(innerHtml);
+            }
+            document.getElementById("display-area").innerHTML = innerHtml;
+        }
+    </script>
+</body>
+
+</html>

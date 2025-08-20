@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Javascript練習</title>       
+</head>
+
+<body>
+    <button onclick="showMessage()">測試</button>
+    <script>
+
+        var 變數1 = "這是變數1";    
+
+        var 變數2 = "這是變數2";
+
+        var 變數3 = "這是變數3";
+
+        var 變數4 = "這是變數4";
+
+        var 預計印出的內容 ="";
+
+        var 變數陣列 = [變數1, 變數2, 變數3, 變數4];
+
+        var 第幾個 = 0;
+
+        // 在這裡撰寫你的JavaScript程式碼
+        function showMessage() {      
+            for(var i = 2; i < 10; i=i+1) {
+                for(var j = 2; j < 10; j=j+1) {
+                    myConsoleLog(i + " * " + j + " = " + (i * j));
+                }
+            }    
+        }
+
+        function myConsoleLog(message) {
+            console.log("這是我的console log訊息  " + message);
+        }
+    </script>
+</body>
+
+</html>
