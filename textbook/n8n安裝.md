@@ -1,5 +1,12 @@
 ## n8n個人本地安裝方法：使用 Docker 或 Docker Compose（推薦，穩定可持續使用）
 
+> 前置提醒：請先安裝好 Docker（Windows / macOS 建議使用 Docker Desktop，Linux 可自行安裝 Docker Engine），並確認以下指令可正常執行：
+> ```powershell
+> docker --version
+> docker compose version
+> ```
+> 若未安裝，可至官方： https://www.docker.com/get-started 下載。`docker compose` 新版已內建於 Docker CLI；若顯示找不到指令，可改用 `docker-compose`（舊版）。
+
 此方式適合：需要環境一致性、方便升級與設定資料持久化的情境。
 
 ---
