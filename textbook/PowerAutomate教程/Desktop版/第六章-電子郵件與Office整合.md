@@ -11,8 +11,8 @@
 2. 附件處理流程
    - 自動下載附件、解析 (例如 Excel/CSV/PDF)、根據內容採取動作
 
-3. 與 Teams / SharePoint 整合
-   - 發送通知到 Teams 頻道、上傳檔案到 SharePoint
+3. 與 Teams 整合
+   - 發送通知到 Teams 頻道
 
 4. 安全與敏感資料處理
    - 資料脫敏、憑證與密碼管理建議

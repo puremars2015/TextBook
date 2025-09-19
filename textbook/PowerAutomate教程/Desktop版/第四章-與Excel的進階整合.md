@@ -13,7 +13,7 @@
    - 從資料夾批次處理多個檔案（CSV/XLSX）
    - 套用 Excel 範本並輸出報表
 
-3. 與 OneDrive / SharePoint 同步注意事項
+3. 與 OneDrive
    - 本機檔案與雲端檔案的鎖定與同步差異
    - 使用暫存複本以避免衝突
 
