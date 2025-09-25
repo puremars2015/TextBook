@@ -1,0 +1,43 @@
+{
+  "name": "LINE Echo Webhook (raw body)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "line-echo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1f2b3c4-echo-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.body }}",
+        "responseCode": 200,
+        "options": {}
+      },
+      "id": "d5e6f7g8-respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [540, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          { "node": "Respond to Webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "LINE_ECHO_RAW_BODY"
+}
