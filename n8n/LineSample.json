@@ -1,0 +1,228 @@
+{
+  "name": "LineSample",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 關於這個節點的作者\n\n**公司名稱**: 好事發生數位  \n**公司網址**: [https://ohya.co](https://ohya.co)  \n**LINE 社群**: [點我加入 LINE 群組](https://line.me/ti/g2/bfnrSbbUE56PISKtQa9KK5gqpMhed_DXf-hmQw)  \n**聯絡信箱**: gary@ohya.co  \n**Threads**: [https://www.threads.net/@ohya.studio](https://www.threads.net/@ohya.studio)",
+        "height": 220,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -400
+      ],
+      "id": "36f6756a-9e81-427a-a292-cbb7496d84a9",
+      "name": "關於這個節點的作者"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "callback",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        -32
+      ],
+      "id": "aec82924-0038-41f9-bc21-3c3296bbcb49",
+      "name": "Webhook 入口",
+      "webhookId": "PLACEHOLDER-WEBHOOK-ID"
+    },
+    {
+      "parameters": {
+        "content": "## Webhook 入口\n\n**說明：**\n- 監聽來自 LINE 的訊息，觸發自動回應流程。\n\n**注意事項：**\n1. 確保 Webhook 設定正確，確保 LINE 可發送請求。\n2. 需要在 LINE Developers Console 設定 Webhook URL。",
+        "height": 260,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        -288
+      ],
+      "id": "b8923055-142f-4c7a-b50a-12ee9ca7fd1f",
+      "name": "Webhook 入口說明"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.events[0].message.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a helpful assistant",
+          "maxIterations": 10,
+          "returnIntermediateSteps": false,
+          "passthroughBinaryImages": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -32,
+        -32
+      ],
+      "id": "50e08f2d-1fa4-461b-a4b2-b172f07de49c",
+      "name": "AI 語言模型"
+    },
+    {
+      "parameters": {
+        "content": "## AI 語言模型\n\n**說明：**\n- 呼叫 AI 模型（如 Google Gemini）來產生適當回應。\n\n**注意事項：**\n1. 確保 API Key 正確填寫，避免請求失敗。\n2. 設定 `prompt` 要求輸出 JSON，避免格式錯誤。",
+        "height": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -448
+      ],
+      "id": "f676be81-1517-4019-8f2a-f3db6b6737bc",
+      "name": "AI 語言模型說明"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// 取得 `replyToken` 和 `output`\nconst replyToken = $('Webhook 入口').first().json.body.events[0].replyToken;\nconst text = $input.first().json.output;\n\n// 回傳整理後的結果\nreturn [\n  {\n    json: {\n      replyToken: replyToken,\n      text: text\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        -32
+      ],
+      "id": "456f626c-3f49-4030-9bc7-50817d699a29",
+      "name": "處理 AI 回應",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "content": "## 處理 AI 回應\n\n**說明：**\n- 解析 AI 產生的回應，取得 `replyToken` 和 `text`。\n\n**注意事項：**\n1. 確保 AI Agent 輸出的格式正確。\n2. 若 AI 輸出錯誤，應該要在這裡處理錯誤邏輯。",
+        "height": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        288,
+        128
+      ],
+      "id": "eb0ced79-4aee-46ce-aaa4-bdd5d4e17037",
+      "name": "處理 AI 回應的說明"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer FWz/gKhiCZ4IvSc+ScIfe7Cvt5QGglU2H8y+Sw9IviD0bOoCS9fBTCq0t8avYqOSHCG++EA5TRPXTJSIdbbsWPPp43i4vuh0TttM/yCx3VGqj3d321/Xl3qUeb6obXX+o+pLlgap/iDSlh3++Pk1nwdB04t89/1O/w1cDnyilFU="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"replyToken\": \"{{ $json.replyToken }}\",\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"{{ $json.text }}\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        576,
+        -32
+      ],
+      "id": "30496aae-2a73-4763-97e8-8ca927c86845",
+      "name": "發送回應給 LINE"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        240
+      ],
+      "id": "ca407b2e-3f24-48d9-8fcf-4566813d3cd1",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "blboAoqwJ7mbsvay",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook 入口": {
+      "main": [
+        [
+          {
+            "node": "AI 語言模型",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI 語言模型": {
+      "main": [
+        [
+          {
+            "node": "處理 AI 回應",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "處理 AI 回應": {
+      "main": [
+        [
+          {
+            "node": "發送回應給 LINE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI 語言模型",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2e253149-ef7d-4ced-930c-0a37d9410441",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4403255bf3f2f087d6685202235bb8c9d697c5697c2148e09e97ac735c1c9156"
+  },
+  "id": "dTYyXgaFqfus8na9",
+  "tags": []
+}
