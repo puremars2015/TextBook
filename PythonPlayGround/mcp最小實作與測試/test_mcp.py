@@ -7,14 +7,26 @@ def test_rpc_list_tools():
     # no mcp-session-id header is provided. After initialization you can use
     # the returned session id for subsequent calls.
     def make_payload(method: str, id: int = 1, params: dict | None = None):
-        return {
+        payload = {
             "jsonrpc": "2.0",
             "id": id,
-            "method": method,
-            "params": params or {}
+            "method": method
         }
+        # 只有當 params 不為 None 且不為空字典時才加入
+        if params:
+            payload["params"] = params
+        return payload
 
-    init_payload = make_payload("initialize", id=1)
+    # initialize 需要包含 protocolVersion 和 clientInfo
+    init_params = {
+        "protocolVersion": "2024-11-05",
+        "clientInfo": {
+            "name": "test-client",
+            "version": "1.0.0"
+        },
+        "capabilities": {}
+    }
+    init_payload = make_payload("initialize", id=1, params=init_params)
     headers = {"Content-Type": "application/json"}
     # The MCP server requires the client to accept both JSON and server-sent events
     # so include both in the Accept header.
@@ -53,8 +65,21 @@ def test_rpc_list_tools():
         else:
             print("No session id found in headers or first SSE data. You may need to inspect the server logs or response to find the session id.")
 
+        # 1.5) Send initialized notification (required by MCP protocol after initialize)
+        if session_id:
+            headers_with_session = dict(headers)
+            headers_with_session["mcp-session-id"] = session_id
+            # Notifications don't have an id field
+            initialized_payload = {
+                "jsonrpc": "2.0",
+                "method": "notifications/initialized"
+            }
+            r_init = requests.post(url, data=json.dumps(initialized_payload), headers=headers_with_session, timeout=5)
+            print("Initialized notification status code:", r_init.status_code)
+
         # 2) If we have a session id, call tools/list; otherwise try calling tools/list without session id (may fail)
-        tools_payload = make_payload("tools/list", id=2)
+        # tools/list 不需要 params，所以不傳入
+        tools_payload = make_payload("tools/list", id=2, params=None)
         if session_id:
             headers_with_session = dict(headers)
             headers_with_session["mcp-session-id"] = session_id
@@ -65,7 +90,25 @@ def test_rpc_list_tools():
         print("tools/list status code:", r2.status_code)
         print("tools/list raw response:\n", r2.text)
         ct2 = r2.headers.get("Content-Type", "")
-        if ct2.startswith("application/json"):
+        
+        # Parse SSE format response
+        if ct2.startswith("text/event-stream"):
+            # Extract JSON from SSE data: line
+            for ln in r2.text.splitlines():
+                if ln.startswith("data:"):
+                    data_json = ln[len("data:"):].strip()
+                    try:
+                        parsed = json.loads(data_json)
+                        if "result" in parsed:
+                            print("\n=== tools/list 解析成功 ===")
+                            print(json.dumps(parsed["result"], indent=2, ensure_ascii=False))
+                        elif "error" in parsed:
+                            print("\n=== tools/list 錯誤 ===")
+                            print(json.dumps(parsed["error"], indent=2, ensure_ascii=False))
+                    except Exception as e:
+                        print("Failed to parse SSE data:", e)
+                    break
+        elif ct2.startswith("application/json"):
             try:
                 print("tools/list JSON:")
                 print(json.dumps(r2.json(), indent=2, ensure_ascii=False))
