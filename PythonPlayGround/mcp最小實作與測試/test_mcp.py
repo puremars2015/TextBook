@@ -37,6 +37,7 @@ def test_rpc_list_tools():
     try:
         # 1) Send initialize (synchronous read, avoid streaming hang)
         r = requests.post(url, data=json.dumps(init_payload), headers=headers, timeout=5)
+        print(init_payload)
         print("Initialize status code:", r.status_code)
 
         # Try to get session id from response headers first
