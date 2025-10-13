@@ -1,0 +1,153 @@
+{
+  "name": "最小實作與測試MCP",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6f415437-6616-4842-9473-4c9d86442ae4",
+      "name": "When chat message received",
+      "webhookId": "898c9a19-3e98-4838-a05b-7662b0ccf48d"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ef3ec88d-f668-4f4e-9004-ce545d458dce",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "7a3eac1f-0727-4e50-aab9-20bb5d901708",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1nyRVYzgG1IzyosD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -272
+      ],
+      "id": "96ffe30b-1644-4a59-becd-1db4661d166b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8000/mcp",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"initialize\",\n  \"params\": {\n    \"protocolVersion\": \"2024-11-05\",\n    \"clientInfo\": {\n      \"name\": \"test-client\",\n      \"version\": \"1.0.0\"\n    },\n    \"capabilities\": {}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        -272
+      ],
+      "id": "9c2d308f-45a1-4d1c-ba6d-23d14333f686",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://host.docker.internal:8000/mcp",
+        "serverTransport": "httpStreamable",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        208
+      ],
+      "id": "1ddba0a6-395e-457e-a419-a63f392d1ce8",
+      "name": "MCP Client"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f24e6162-71bb-468c-8efd-b075817aa1ff",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4403255bf3f2f087d6685202235bb8c9d697c5697c2148e09e97ac735c1c9156"
+  },
+  "id": "kkbMcFo7lgQ1eSRv",
+  "tags": []
+}

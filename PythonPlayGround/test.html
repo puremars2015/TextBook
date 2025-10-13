@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MCP Server 網路測試介面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .tool-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.info {
+            background-color: #2196F3;
+        }
+        button.info:hover {
+            background-color: #0b7dda;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .error {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #333;
+        }
+        .info-box {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        .loading {
+            display: none;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌐 MCP Server 網路測試介面</h1>
+    
+    <div class="info-box">
+        <strong>📡 MCP Server 位址:</strong> <span id="server-url">http://localhost:8000</span><br>
+        <strong>ℹ️ 說明:</strong> 這個介面會透過 HTTP 請求實際呼叫您的 MCP Server
+    </div>
+
+    <div class="tool-card">
+        <h2>🔍 列出所有工具</h2>
+        <p>查看 MCP Server 提供的所有工具</p>
+        <button class="info" onclick="listTools()">列出工具</button>
+        <div class="loading" id="loading-list">載入中...</div>
+        <div id="result-list" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="tool-card">
+        <h2>⏰ 取得台北時間</h2>
+        <button onclick="callTool('get_tpe_datetime', {})">執行</button>
+        <div class="loading" id="loading-datetime">執行中...</div>
+        <div id="result-datetime" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="tool-card">
+        <h2>🎤 我最喜歡的歌手</h2>
+        <button onclick="callTool('my_favorite_singer', {})">執行</button>
+        <div class="loading" id="loading-singer">執行中...</div>
+        <div id="result-singer" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="tool-card">
+        <h2>📖 讀取文字檔</h2>
+        <input type="text" id="read-filepath" placeholder="輸入檔案路徑 (例如: test.txt)">
+        <button onclick="readFile()">讀取</button>
+        <div class="loading" id="loading-read">執行中...</div>
+        <div id="result-read" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="tool-card">
+        <h2>✍️ 寫入文字檔</h2>
+        <input type="text" id="write-filepath" placeholder="輸入檔案路徑 (例如: test.txt)">
+        <textarea id="write-content" rows="4" placeholder="輸入要寫入的內容"></textarea>
+        <button onclick="writeFile()">寫入</button>
+        <div class="loading" id="loading-write">執行中...</div>
+        <div id="result-write" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const MCP_SERVER = 'http://127.0.0.1:8000';
+        let requestId = 1;
+
+        // 列出所有工具
+        async function listTools() {
+            const resultDiv = document.getElementById('result-list');
+            const loadingDiv = document.getElementById('loading-list');
+            
+            try {
+                loadingDiv.style.display = 'block';
+                resultDiv.style.display = 'none';
+                
+                const response = await fetch(`${MCP_SERVER}/list-tools`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: requestId++,
+                        method: 'tools/list'
+                    })
+                });
+
+                const data = await response.json();
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.classList.remove('error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.classList.add('error');
+                resultDiv.textContent = '錯誤: ' + error.message;
+            }
+        }
+
+        // 呼叫工具
+        async function callTool(toolName, args) {
+            const resultDiv = document.getElementById('result-' + toolName.split('_').pop());
+            const loadingDiv = document.getElementById('loading-' + toolName.split('_').pop());
+            
+            try {
+                loadingDiv.style.display = 'block';
+                resultDiv.style.display = 'none';
+                
+                const response = await fetch(`${MCP_SERVER}/call-tool`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: requestId++,
+                        method: 'tools/call',
+                        params: {
+                            name: toolName,
+                            arguments: args
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.classList.remove('error');
+                
+                if (data.result) {
+                    resultDiv.textContent = '回應:\n' + JSON.stringify(data.result, null, 2);
+                } else {
+                    resultDiv.textContent = '完整回應:\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.classList.add('error');
+                resultDiv.textContent = '錯誤: ' + error.message + '\n\n請確認 MCP Server 已啟動在 ' + MCP_SERVER;
+            }
+        }
+
+        // 讀取檔案
+        async function readFile() {
+            const filepath = document.getElementById('read-filepath').value;
+            if (!filepath) {
+                alert('請輸入檔案路徑');
+                return;
+            }
+            await callTool('read_txt', { filepath: filepath });
+        }
+
+        // 寫入檔案
+        async function writeFile() {
+            const filepath = document.getElementById('write-filepath').value;
+            const content = document.getElementById('write-content').value;
+            
+            if (!filepath) {
+                alert('請輸入檔案路徑');
+                return;
+            }
+            
+            await callTool('write_txt', { 
+                filepath: filepath, 
+                content: content 
+            });
+        }
+    </script>
+</body>
+</html>
