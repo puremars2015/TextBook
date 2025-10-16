@@ -326,11 +326,11 @@ def create_presentation(use_template: bool = True,
         # 建立新簡報
         if use_template and template_prs:
             prs = Presentation(template_path)
-            # 清空所有投影片
-            while len(prs.slides) > 0:
-                rId = prs.slides._sldIdLst[0].rId
+            # 清空所有投影片 (安全作法)
+            for i in range(len(prs.slides) - 1, -1, -1):
+                rId = prs.slides._sldIdLst[i].rId
                 prs.part.drop_rel(rId)
-                del prs.slides._sldIdLst[0]
+                del prs.slides._sldIdLst[i]
         else:
             prs = Presentation()
             if use_template and not template_prs:
@@ -522,12 +522,21 @@ def compile_from_description(description_text: str,
 
 
 @mcp.tool()
-def list_layouts() -> Dict[str, Any]:
+def list_layouts(session_id: Optional[str] = None) -> Dict[str, Any]:
     """
     列出目前樣板或工作中的簡報可用版面
+    
+    Args:
+        session_id: 工作階段 ID (可選)
     """
     try:
-        prs = template_prs if template_prs else Presentation()
+        prs = None
+        if session_id and session_id in sessions:
+            prs = sessions[session_id]
+        elif template_prs:
+            prs = template_prs
+        else:
+            prs = Presentation()
         
         layouts = []
         for i, layout in enumerate(prs.slide_layouts):
@@ -730,7 +739,7 @@ if __name__ == "__main__":
     
     # 預設使用 streamable HTTP 模式
     mode = "http"
-    port = 8000
+    port = 8700
     host = "127.0.0.1"
     
     # 解析命令列參數
