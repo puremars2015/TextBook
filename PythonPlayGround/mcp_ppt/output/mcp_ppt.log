@@ -1,0 +1,95 @@
+2025-10-14 17:25:42,623 - INFO - Starting MCP PPT Server in streamable HTTP mode on 127.0.0.1:8000...
+2025-10-14 17:25:42,634 - INFO - StreamableHTTP session manager started
+2025-10-14 17:26:39,657 - INFO - Created new transport with session ID: 057c0caff994498998d0ffbc97438a50
+2025-10-14 17:26:39,694 - INFO - Processing request of type ListToolsRequest
+2025-10-14 17:26:45,288 - INFO - Processing request of type CallToolRequest
+2025-10-14 17:26:45,309 - INFO - Template set: /Users/maenqi/TextBook/PythonPlayGround/mcp_ppt/template.pptx
+2025-10-14 17:29:32,191 - INFO - StreamableHTTP session manager shutting down
+2025-10-14 17:29:34,189 - INFO - Starting MCP PPT Server in streamable HTTP mode on 127.0.0.1:8000...
+2025-10-14 17:29:34,201 - INFO - StreamableHTTP session manager started
+2025-10-14 17:37:20,147 - INFO - Created new transport with session ID: 1e02da21e55c46d8906b6a464c218afb
+2025-10-14 17:37:20,169 - INFO - Processing request of type ListToolsRequest
+2025-10-14 17:37:24,990 - INFO - Processing request of type CallToolRequest
+2025-10-14 17:37:25,014 - INFO - Template set: /Users/maenqi/TextBook/PythonPlayGround/mcp_ppt/template.pptx
+2025-10-14 17:38:57,425 - INFO - StreamableHTTP session manager shutting down
+2025-10-14 17:39:01,413 - INFO - Starting MCP PPT Server in streamable HTTP mode on 127.0.0.1:8000...
+2025-10-14 17:39:01,424 - INFO - StreamableHTTP session manager started
+2025-10-14 17:39:26,435 - INFO - Created new transport with session ID: 8e6ae4592f6e47b79f46ae94f08b398d
+2025-10-14 17:39:26,451 - INFO - Processing request of type ListToolsRequest
+2025-10-14 17:39:30,069 - INFO - Processing request of type CallToolRequest
+2025-10-14 17:43:29,531 - INFO - Created new transport with session ID: 89d8cb9413954c87ba98e44d480c8b36
+2025-10-14 17:43:29,553 - INFO - Processing request of type ListToolsRequest
+2025-10-14 17:43:34,004 - INFO - Processing request of type CallToolRequest
+2025-10-14 17:43:34,026 - INFO - Template set: /Users/maenqi/TextBook/PythonPlayGround/mcp_ppt/template.pptx
+2025-10-14 17:44:33,146 - INFO - StreamableHTTP session manager shutting down
+2025-10-14 20:15:33,965 - INFO - Starting MCP PPT Server in streamable HTTP mode on 127.0.0.1:8000...
+2025-10-14 20:15:33,976 - INFO - StreamableHTTP session manager started
+2025-10-14 20:15:33,976 - INFO - StreamableHTTP session manager shutting down
+2025-10-14 20:15:49,347 - INFO - Starting MCP PPT Server in streamable HTTP mode on 127.0.0.1:8700...
+2025-10-14 20:15:49,358 - INFO - StreamableHTTP session manager started
+2025-10-14 20:16:03,945 - INFO - Created new transport with session ID: 9c2ab74d71f84592b508b5d585d71c6d
+2025-10-14 20:16:03,969 - INFO - Processing request of type ListToolsRequest
+2025-10-14 20:16:26,059 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:16:26,083 - WARNING - Template requested but not set, using blank presentation
+2025-10-14 20:16:26,083 - INFO - Presentation created: 42aeef75-cf8b-4feb-b131-c3d837cfaeeb
+2025-10-14 20:16:30,572 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:16:30,583 - WARNING - Layout 'section_header_and_content' not found, using layout 0
+2025-10-14 20:16:30,593 - INFO - Slide added to session 42aeef75-cf8b-4feb-b131-c3d837cfaeeb, index: 0
+2025-10-14 20:16:30,594 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:16:30,601 - WARNING - Layout 'title_and_content' not found, using layout 0
+2025-10-14 20:16:30,605 - INFO - Slide added to session 42aeef75-cf8b-4feb-b131-c3d837cfaeeb, index: 1
+2025-10-14 20:16:30,607 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:16:30,612 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:16:58,734 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:16:58,746 - WARNING - Template requested but not set, using blank presentation
+2025-10-14 20:16:58,746 - INFO - Presentation created: a8f41ab7-a8a1-4ebd-9f3b-8ab0f9bfd3b5
+2025-10-14 20:17:03,471 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:03,484 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:03,494 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:03,501 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:22,380 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:22,393 - WARNING - Template requested but not set, using blank presentation
+2025-10-14 20:17:22,393 - INFO - Presentation created: 522e475c-2ad3-4617-9adf-c1ea00166af3
+2025-10-14 20:17:24,649 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:29,094 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:29,120 - INFO - Slide added to session 522e475c-2ad3-4617-9adf-c1ea00166af3, index: 0
+2025-10-14 20:17:29,121 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:29,130 - INFO - Slide added to session 522e475c-2ad3-4617-9adf-c1ea00166af3, index: 1
+2025-10-14 20:17:29,131 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:29,137 - INFO - Slide added to session 522e475c-2ad3-4617-9adf-c1ea00166af3, index: 2
+2025-10-14 20:17:50,278 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:50,290 - WARNING - Template requested but not set, using blank presentation
+2025-10-14 20:17:50,290 - INFO - Presentation created: 27b7ef91-5aaf-4a76-b6ab-fcd8ede18956
+2025-10-14 20:17:51,960 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:17:51,977 - INFO - Presentation saved: /private/tmp/AI_vs_Environment.pptx
+2025-10-14 20:21:28,936 - INFO - StreamableHTTP session manager shutting down
+2025-10-14 20:22:00,551 - INFO - Starting MCP PPT Server in streamable HTTP mode on 127.0.0.1:8700...
+2025-10-14 20:22:00,563 - INFO - StreamableHTTP session manager started
+2025-10-14 20:22:04,597 - INFO - Created new transport with session ID: aa821cc7b00a477ba901486241b492aa
+2025-10-14 20:22:04,615 - INFO - Processing request of type ListToolsRequest
+2025-10-14 20:22:28,732 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:22:28,770 - WARNING - Template requested but not set, using blank presentation
+2025-10-14 20:22:28,770 - INFO - Presentation created: 4658b17a-ce7c-4809-959b-8a3f8810e78d
+2025-10-14 20:22:30,740 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:22:30,758 - INFO - Slide added to session 4658b17a-ce7c-4809-959b-8a3f8810e78d, index: 0
+2025-10-14 20:22:34,224 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:22:34,238 - WARNING - Layout 'Content Slide' not found, using layout 0
+2025-10-14 20:22:34,246 - INFO - Slide added to session 4658b17a-ce7c-4809-959b-8a3f8810e78d, index: 1
+2025-10-14 20:22:38,389 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:22:38,401 - WARNING - Layout 'Content Slide' not found, using layout 0
+2025-10-14 20:22:38,408 - INFO - Slide added to session 4658b17a-ce7c-4809-959b-8a3f8810e78d, index: 2
+2025-10-14 20:22:40,457 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:22:40,469 - WARNING - Layout 'Content Slide' not found, using layout 0
+2025-10-14 20:22:40,474 - INFO - Slide added to session 4658b17a-ce7c-4809-959b-8a3f8810e78d, index: 3
+2025-10-14 20:22:43,502 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:22:43,513 - WARNING - Layout 'Content Slide' not found, using layout 0
+2025-10-14 20:22:43,521 - INFO - Slide added to session 4658b17a-ce7c-4809-959b-8a3f8810e78d, index: 4
+2025-10-14 20:23:11,915 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:23:11,916 - INFO - All sessions and template cache cleared
+2025-10-14 20:23:14,074 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:23:14,088 - WARNING - Template requested but not set, using blank presentation
+2025-10-14 20:23:14,088 - INFO - Presentation created: 9e13f453-87c3-4ac5-bf53-33c4dc2ba467
+2025-10-14 20:23:15,663 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:23:17,330 - INFO - Processing request of type CallToolRequest
+2025-10-14 20:23:17,346 - INFO - Slide added to session 9e13f453-87c3-4ac5-bf53-33c4dc2ba467, index: 0
+2025-10-14 20:24:26,518 - INFO - StreamableHTTP session manager shutting down
