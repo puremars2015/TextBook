@@ -61,7 +61,7 @@ if __name__ == '__main__':
     
     # 建立 Starlette app 並新增自訂路由
     app = mcp.streamable_http_app()
-    app.add_route("/openapi.yaml", openapi_manifest, methods=["GET"])
+    # app.add_route("/openapi.yaml", openapi_manifest, methods=["GET"])
     
     # 啟動伺服器
     uvicorn.run(app, host="127.0.0.1", port=8000)
