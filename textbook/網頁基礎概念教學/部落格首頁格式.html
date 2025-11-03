@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的部落格</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        
+        /* 頂部導航 */
+        .topbar {
+            background: #007bff;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .topbar h1 { 
+            font-size: 1.5rem; 
+            margin: 0;
+        }
+        
+        .topbar-nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .topbar-nav li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .topbar-nav li a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* 側邊選單 (僅手機版) */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #2c3e50;
+            color: white;
+            padding: 5rem 1.5rem 1.5rem;
+            transition: transform 0.3s ease;
+            z-index: 999;
+            transform: translateX(-100%);
+        }
+        
+        .sidebar.visible {
+            transform: translateX(0);
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+        }
+        
+        .sidebar nav ul li {
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .sidebar nav ul li a:hover {
+            background: #34495e;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* 主要內容區 */
+        .main-content {
+            margin-left: 0;
+            padding: 2rem;
+            padding-top: 6rem; /* 為固定的頂部導航留空間 */
+            transition: margin-left 0.3s ease;
+        }
+        
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .post-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .post-card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #007bff;
+        }
+        
+        .post-card .meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.75rem;
+        }
+        
+        .post-card p {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .post-card a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        /* 響應式:平板與手機 */
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 1rem;
+            }
+            
+            .topbar-nav {
+                display: none; /* 手機版隱藏頂部導航,改用側邊欄 */
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding-top: 5rem;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .post-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導航 -->
+    <header class="topbar">
+        <h1>我的部落格</h1>
+        <nav>
+            <ul class="topbar-nav">
+                <li><a href="#home">首頁</a></li>
+                <li><a href="#tech">技術文章</a></li>
+                <li><a href="#life">生活紀錄</a></li>
+                <li><a href="#projects">專案作品</a></li>
+                <li><a href="#about">關於我</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+    </header>
+    
+    <!-- 側邊選單 (僅手機版) -->
+    <aside class="sidebar" id="sidebar">
+        <button class="close-btn" id="closeBtn">✕</button>
+        <nav>
+            <ul>
+                <li><a href="#home">首頁</a></li>
+                <li><a href="#tech">技術文章</a></li>
+                <li><a href="#life">生活紀錄</a></li>
+                <li><a href="#projects">專案作品</a></li>
+                <li><a href="#about">關於我</a></li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- 主要內容 -->
+    <main class="main-content" id="mainContent">
+        <h2>最新文章</h2>
+        <div class="post-grid">
+            <article class="post-card">
+                <h2>如何學習前端開發</h2>
+                <p class="meta">2025/01/15 | 技術</p>
+                <p>前端開發入門指南，涵蓋 HTML、CSS、JavaScript 基礎與學習路徑建議...</p>
+                <a href="#">閱讀更多 →</a>
+            </article>
+            
+            <article class="post-card">
+                <h2>CSS Flexbox 完整教學</h2>
+                <p class="meta">2025/01/10 | 技術</p>
+                <p>深入淺出介紹 Flexbox 排版原理與實務應用，包含常見佈局範例...</p>
+                <a href="#">閱讀更多 →</a>
+            </article>
+            
+            <article class="post-card">
+                <h2>我的開發工具推薦</h2>
+                <p class="meta">2025/01/05 | 生活</p>
+                <p>分享日常使用的編輯器、插件與效率工具，提升開發體驗...</p>
+                <a href="#">閱讀更多 →</a>
+            </article>
+            
+            <article class="post-card">
+                <h2>響應式設計要點</h2>
+                <p class="meta">2024/12/28 | 技術</p>
+                <p>RWD 設計原則與媒體查詢實務，確保網站在各裝置正常顯示...</p>
+                <a href="#">閱讀更多 →</a>
+            </article>
+        </div>
+    </main>
+    
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const closeBtn = document.getElementById('closeBtn');
+        const mainContent = document.getElementById('mainContent');
+        
+        // 手機版:點擊漢堡選單顯示側邊欄
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('visible');
+        });
+        
+        // 手機版:點擊關閉按鈕隱藏側邊欄
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('visible');
+        });
+        
+        // 手機版:點擊主內容區關閉選單
+        mainContent.addEventListener('click', () => {
+            if (sidebar.classList.contains('visible')) {
+                sidebar.classList.remove('visible');
+            }
+        });
+        
+        // 點擊側邊欄內的連結後自動關閉選單
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('visible');
+            });
+        });
+    </script>
+</body>
+</html>

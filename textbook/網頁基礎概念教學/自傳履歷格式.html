@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>個人履歷</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; line-height: 1.6; color: #333; background: #f9f9f9; }
+        
+        .resume-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 4px solid #007bff;
+        }
+        
+        .header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .header p { color: #666; font-size: 0.95rem; }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section h2 {
+            font-size: 1.5rem;
+            color: #007bff;
+            border-left: 4px solid #007bff;
+            padding-left: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section p { margin-bottom: 0.75rem; }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            list-style: none;
+        }
+        
+        .skills-list li {
+            background: #e7f3ff;
+            color: #007bff;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .experience-item {
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid #ddd;
+        }
+        
+        .experience-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .experience-item .date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 響應式:手機版調整 */
+        @media (max-width: 600px) {
+            .resume-container { padding: 1.5rem; margin: 1rem; }
+            .header h1 { font-size: 1.5rem; }
+            .header img { width: 120px; height: 120px; }
+            .section h2 { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <header class="header">
+            <img src="https://www.shiningshot.com/wp-content/uploads/2024/03/%E8%89%BE%E5%A6%83%E6%8B%89%E5%BD%B1%E5%83%8F-%E9%9F%93%E5%BC%8F%E8%AD%89%E4%BB%B6%E7%85%A71-796x1024.webp" alt="個人照片">
+            <h1>張小明</h1>
+            <p>前端工程師 | example@email.com | 0912-345-678</p>
+        </header>
+        
+        <section class="section">
+            <h2>自我介紹</h2>
+            <p>熱愛網頁開發，擁有三年前端經驗，熟悉 HTML、CSS、JavaScript 及現代框架。注重使用者體驗與可及性，善於團隊協作與問題解決。</p>
+        </section>
+        
+        <section class="section">
+            <h2>專業技能</h2>
+            <ul class="skills-list">
+                <li>HTML5 / CSS3</li>
+                <li>JavaScript (ES6+)</li>
+                <li>React / Vue</li>
+                <li>響應式設計</li>
+                <li>Git / GitHub</li>
+                <li>Webpack / Vite</li>
+            </ul>
+        </section>
+        
+        <section class="section">
+            <h2>工作經歷</h2>
+            <div class="experience-item">
+                <h3>前端工程師 — ABC 科技公司</h3>
+                <p class="date">2021/06 - 至今</p>
+                <p>負責企業官網與內部系統前端開發，使用 React 建構可重複使用的元件，優化頁面載入速度並實作響應式設計。</p>
+            </div>
+            <div class="experience-item">
+                <h3>網頁設計實習生 — XYZ 工作室</h3>
+                <p class="date">2020/09 - 2021/05</p>
+                <p>協助設計與開發小型專案網站，學習前端基礎與協作流程。</p>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>學歷</h2>
+            <p><strong>國立○○大學</strong> — 資訊管理學系 (2016-2020)</p>
+        </section>
+    </div>
+</body>
+</html>
