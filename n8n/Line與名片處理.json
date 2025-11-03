@@ -1,0 +1,759 @@
+{
+  "name": "Line與名片處理",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "line-chatbot-9527",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        336
+      ],
+      "id": "00d085e7-0e99-4cf8-912d-07885d9e9d93",
+      "name": "Webhook",
+      "webhookId": "b5cd7f01-be23-41ec-8835-cffbe62d7459"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5e880bf1-cc57-4689-9184-5f49e455ddf8",
+              "name": "type",
+              "value": "={{ $json.body.events[0].message.type }}",
+              "type": "string"
+            },
+            {
+              "id": "1329d613-afb4-48c0-9e41-b231270adcfe",
+              "name": "message_id",
+              "value": "={{ $json.body.events[0].message.id }}",
+              "type": "string"
+            },
+            {
+              "id": "ce2d4013-92e3-4f55-adde-3f7ccd3f1cae",
+              "name": "reply_token",
+              "value": "={{ $json.body.events[0].replyToken }}",
+              "type": "string"
+            },
+            {
+              "id": "74b08efb-8842-4656-8f9f-4526f470645e",
+              "name": "message_text",
+              "value": "={{ $json.body.events[0].message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        336
+      ],
+      "id": "6ffc6445-82f3-47a4-aaa8-dbc98a2861ea",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "1edebd08-ffd2-49eb-90d5-c4fec716aa1c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "文字訊息"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d17021cc-45a0-4f73-b924-33d79eaad644",
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "圖片"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": 0
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -32,
+        336
+      ],
+      "id": "eee2a1f0-2158-4291-af55-b8f7fc5865d0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "url": "=https://api-data.line.me/v2/bot/message/{{ $json.message_id }}/content",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer j9aEmTyzt3+CgLcpiFQEVjYVv8fYvgij3tFDoIfmLpVWe9bsTX7TQH6VZjkHvDzeXE0KeI2DF53sJuMul1JZyXxCdVejr5waFKgCCvVjn1SvC9fZUu8jAedzMMqSG6v63LMQUW0tJsICeKIjSiRI3QdB04t89/1O/w1cDnyilFU="
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "output.jpg"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        192,
+        496
+      ],
+      "id": "c4b52bd4-6993-4a9a-a9e9-ec1c8a2fb4b6",
+      "name": "拿照片"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        160,
+        752
+      ],
+      "id": "b4905533-6f6e-4443-8090-54e2d541ef8d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lvHNbnwOAovyp0ia",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"name\": \"張三\",\n  \"email\": \"three@5xcampus.com\", \n  \"title\": \"掃地的\",\n  \"company_name\": \"五倍學院\", \n  \"phone\": \"0928123123\", \n  \"address\": \"衡陽路七號 100 樓\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        672
+      ],
+      "id": "3bc8f228-b3e3-4d0f-bc1d-1669f70ae0e2",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer j9aEmTyzt3+CgLcpiFQEVjYVv8fYvgij3tFDoIfmLpVWe9bsTX7TQH6VZjkHvDzeXE0KeI2DF53sJuMul1JZyXxCdVejr5waFKgCCvVjn1SvC9fZUu8jAedzMMqSG6v63LMQUW0tJsICeKIjSiRI3QdB04t89/1O/w1cDnyilFU="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"replyToken\":\"{{ $('Edit Fields').item.json.reply_token }}\",\n    \"messages\":[\n        {\n            \"type\":\"text\",\n            \"text\":\"名片（{{ $json.name }}）已建檔！\"\n        }\n    ]\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        400
+      ],
+      "id": "14f27121-a600-4174-b56e-25fccfe67e98",
+      "name": "聊天回應"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer j9aEmTyzt3+CgLcpiFQEVjYVv8fYvgij3tFDoIfmLpVWe9bsTX7TQH6VZjkHvDzeXE0KeI2DF53sJuMul1JZyXxCdVejr5waFKgCCvVjn1SvC9fZUu8jAedzMMqSG6v63LMQUW0tJsICeKIjSiRI3QdB04t89/1O/w1cDnyilFU="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"replyToken\":\"{{ $('Edit Fields').item.json.reply_token }}\",\n    \"messages\":[\n        {\n            \"type\":\"text\",\n            \"text\":\"這好像不是名片...\"\n        }\n    ]\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        928,
+        608
+      ],
+      "id": "2f8aa912-13b3-4bfe-b716-96b5fe485fb2",
+      "name": "聊天回應1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "19Ep15kMvgwOcGJErTt1DN8J_tl_q3eKjX5QxrPISSa0",
+          "mode": "list",
+          "cachedResultName": "名片助手",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19Ep15kMvgwOcGJErTt1DN8J_tl_q3eKjX5QxrPISSa0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19Ep15kMvgwOcGJErTt1DN8J_tl_q3eKjX5QxrPISSa0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.output.name }}",
+            "email": "={{ $json.output.email }}",
+            "title": "={{ $json.output.title }}",
+            "company_name": "={{ $json.output.company_name }}",
+            "phone": "={{ $json.output.phone }}",
+            "address": "={{ $json.output.address }}"
+          },
+          "matchingColumns": [
+            "email"
+          ],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        400
+      ],
+      "id": "d8d7aca9-38f7-48cf-acb7-a0e16f827339",
+      "name": "名片通訊錄",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9QZbzvhDkgdQl2fs",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d8fee4a8-ee4c-429e-b652-d004a04d340c",
+              "leftValue": "={{ $json.output.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        496
+      ],
+      "id": "b9b68f1f-df7b-4469-b4b7-fec2f44d4fc8",
+      "name": "是否為名片"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        208,
+        288
+      ],
+      "id": "5f42dabf-45ae-40e4-a5cc-82468639dc31",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lvHNbnwOAovyp0ia",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "aaeaca65-1a6a-4061-938a-b82191e01c05",
+      "name": "When chat message received",
+      "webhookId": "233aeac7-8537-4435-b657-4ad6f3e6cb84"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "用來查詢通訊錄或名片的工具",
+        "documentId": {
+          "__rl": true,
+          "value": "19Ep15kMvgwOcGJErTt1DN8J_tl_q3eKjX5QxrPISSa0",
+          "mode": "list",
+          "cachedResultName": "名片助手",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19Ep15kMvgwOcGJErTt1DN8J_tl_q3eKjX5QxrPISSa0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19Ep15kMvgwOcGJErTt1DN8J_tl_q3eKjX5QxrPISSa0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        288
+      ],
+      "id": "4c72f167-f253-4c05-a8e6-3604d44b095b",
+      "name": "名片盒",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9QZbzvhDkgdQl2fs",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer j9aEmTyzt3+CgLcpiFQEVjYVv8fYvgij3tFDoIfmLpVWe9bsTX7TQH6VZjkHvDzeXE0KeI2DF53sJuMul1JZyXxCdVejr5waFKgCCvVjn1SvC9fZUu8jAedzMMqSG6v63LMQUW0tJsICeKIjSiRI3QdB04t89/1O/w1cDnyilFU="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"replyToken\":\"{{ $('Edit Fields').item.json.reply_token }}\",\n    \"messages\":[\n        {\n            \"type\":\"text\",\n            \"text\":\"{{ $json.output.replaceAll(\"\\n\", \"\") }}\"\n        }\n    ]\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        48
+      ],
+      "id": "931d186b-8cfc-4b84-874d-8068fa23e9ce",
+      "name": "聊天回應2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput || $json.message_text }}",
+        "options": {
+          "systemMessage": "=你是「菜市場阿龍」，職務是助理。你的主要工作是幫助使用者查詢和管理通訊錄。\n\n# 重要：何時使用工具\n\n- 當使用者詢問「某個人的資料」、「聯絡方式」、「電話」、「email」時 → 必須使用 `名片盒` 工具查詢\n- 當使用者問「有誰」、「有哪些公司」、「查詢 XXX」時 → 必須使用 `名片盒` 工具查詢\n- 當使用者提到人名、公司名、電話號碼時 → 必須使用 `名片盒` 工具查詢\n- 其他一般聊天 → 直接回覆即可，不需要使用工具\n\n# 查詢規則\n\n1. 收到查詢請求時，你必須先使用 `名片盒` 工具進行查詢\n2. 查詢關鍵字可以是：姓名、公司名稱、電話、Email 等\n3. 即使你不確定能否找到，也要先嘗試查詢\n\n# 回覆規則 - 重要！\n\n1. 只回答使用者問的資訊，不要多給\n2. 如果某個欄位沒有資料（空白或 null），就不要顯示該欄位\n3. 不要顯示空值、null、undefined 或「未提供」等字樣\n\n- 如果只問「電話」→ 只回覆電話\n- 如果只問「email」→ 只回覆 email\n- 如果只問「在哪家公司」→ 只回覆公司\n- 如果問「XXX 的資料」或「全部資料」→ 才回覆完整資訊\n\n# 回覆格式\n\n查詢單一資訊時（精簡回覆）：\n\n- 問電話 → 「{姓名} 的電話是 {電話}」\n- 問 email → 「{姓名} 的 email 是 {email}」\n- 問公司 → 「{姓名} 在 {公司}」\n- 問職稱 → 「{姓名} 是 {職稱}」\n- 如果該欄位沒資料 → 「抱歉，通訊錄裡沒有 {姓名} 的{電話/email/...}」\n\n查詢完整資料時（詳細回覆）：\n找到了！以下是 {姓名} 的資料：\nEmail: xxx （有資料才顯示）\n電話: xxx （有資料才顯示）\n公司: xxx （有資料才顯示）\n職稱: xxx （有資料才顯示）\n地址: xxx （有資料才顯示）\n\n找不到資料時：\n抱歉，我在通訊錄裡找不到相關資料耶。要不要換個關鍵字試試看？\n\n一般聊天時：\n用輕鬆友善的語氣回應即可\n\n# 範例對話\n\n使用者：「張三的電話？」\n你：「張三的電話是 0928617687」\n\n使用者：「張三的資料」\n你：「找到了！以下是張三的資料：\nEmail: three@5xcampus.com\n電話: 0928617687\n職稱: 打掃的」\n（注意：因為公司和地址是空的，所以不顯示）\n\n使用者：「張三的地址」\n你：「抱歉，通訊錄裡沒有張三的地址」\n\n使用者：「今天天氣如何？」\n你：「（一般聊天回覆）」\n\n記住：\n\n1. 使用者問什麼，就回答什麼\n2. 沒有資料的欄位，直接跳過不顯示\n3. 保持簡潔友善"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        48
+      ],
+      "id": "b7e1cae3-ccb3-430b-b98f-e29616ea3b6d",
+      "name": "查詢 Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "data",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "你是我最得力的助理，你會拿到一張照片，請你試著辨識看看，如果你認為這是一張名片，請把識別出來的所有文字產生結構化資料。\n\n如果有缺的資料填寫空白即可"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        496
+      ],
+      "id": "8899a408-e893-4c43-84b4-923982a49fee",
+      "name": "名片設定Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5",
+          "mode": "list",
+          "cachedResultName": "gpt-5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        336,
+        288
+      ],
+      "id": "7f37b468-eb23-4e31-b23c-7fc32a5b459d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZrUwm3LOC6DxrQzF",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5",
+          "mode": "list",
+          "cachedResultName": "gpt-5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        784
+      ],
+      "id": "b0a0727a-6b7f-4954-9f8f-5ce8b6fa2bff",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZrUwm3LOC6DxrQzF",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "查詢 Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "拿照片",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "拿照片": {
+      "main": [
+        [
+          {
+            "node": "名片設定Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "名片設定Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "名片通訊錄": {
+      "main": [
+        [
+          {
+            "node": "聊天回應",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "是否為名片": {
+      "main": [
+        [
+          {
+            "node": "名片通訊錄",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "聊天回應1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "查詢 Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "名片盒": {
+      "ai_tool": [
+        [
+          {
+            "node": "查詢 Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "查詢 Agent": {
+      "main": [
+        []
+      ]
+    },
+    "名片設定Agent": {
+      "main": [
+        [
+          {
+            "node": "是否為名片",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "查詢 Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "名片設定Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bbb3a264-09e7-4aa1-97ba-13a5ce07fcca",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eb5dd35c4f7c44e348fbd2692451a56a597709861e3ca36a3ba88caf29c67d0f"
+  },
+  "id": "z3TEQb1rs0TUeCdq",
+  "tags": []
+}
