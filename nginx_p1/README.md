@@ -12,6 +12,6 @@ docker build -t [image name] .
 
 
 ### 從image執行
-docker run -d --name [container name] -p 443:443 [image name]
+docker run -d --name [container name] -p 80:80 [image name]
 
-docker run -d --name hello-web -p 443:443 hello-world-web
+docker run -d --name hello-web -p 80:80 hello-world-web

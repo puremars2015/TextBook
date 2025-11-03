@@ -21,4 +21,4 @@ def index():
 
 if __name__ == "__main__":
         # 開發用伺服器，可改為 host="0.0.0.0" 在網路上可存取
-        app.run(host="0.0.0.0", port=80, debug=True)
+        app.run(host="0.0.0.0", port=5000, debug=True)

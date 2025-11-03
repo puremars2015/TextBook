@@ -17,8 +17,8 @@ RUN pip install --upgrade pip && \
       pip install --no-cache-dir flask; \
     fi
 
-# 若 app.py 在內部以 0.0.0.0:80 啟動則公開 80；若使用其他 port 請修改
-EXPOSE 80
+# 若 app.py 在內部以 0.0.0.0:5000 啟動則公開 5000；若使用其他 port 請修改
+EXPOSE 5000
 
 # 啟動 app.py（請確保 app.py 使用 host='0.0.0.0' 並監聽相對應的 port）
 CMD ["python", "app.py"]
