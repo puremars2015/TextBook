@@ -7,11 +7,13 @@
 
 
 
-### 建立image
+## 建立image
 docker build -t [image name] .
 
+docker build -t hello-world-web .
 
-### 從image執行
+
+## 從image執行
 docker run -d --name [container name] -p 443:443 [image name]
 
 docker run -d --name hello-web -p 443:443 hello-world-web
