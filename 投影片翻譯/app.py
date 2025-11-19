@@ -15,7 +15,7 @@ def translate_to_vietnamese(text):
     response = client.responses.create(
         model="gpt-5-mini",
         input=[
-            {"role": "system", "content": "You are a professional translator. Translate the following text to Vietnamese."},
+            {"role": "system", "content": "You are a professional translator. Translate the following text to Indonesian."},
             {"role": "user", "content": text}
         ]
     )
@@ -28,7 +28,7 @@ powerpoint = win32com.client.Dispatch("PowerPoint.Application")
 powerpoint.Visible = True
 
 # 打開PPT文件
-ppt_path = os.path.abspath(f"C:\\Users\\sean.ma\\Documents\\TextBook\\powerpoint\\測試範本.pptx")
+ppt_path = os.path.abspath(r"C:\Users\sean.ma\Documents\TextBook\投影片翻譯\114年菸害防制宣導講座 (翻譯泰國、越南、印尼).pptx")
 presentation = powerpoint.Presentations.Open(ppt_path)
 
 # 遞迴處理形狀以處理群組形狀
