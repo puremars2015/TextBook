@@ -39,15 +39,15 @@ def check_chinese_in_image(image_bytes):
 
 
 # ===== 翻譯文字 =====
-def translate_text_to_thai(text):
-    """將文字翻譯成泰文"""
+def translate_text_to_indonesian(text):
+    """將文字翻譯成印尼文"""
     if not text.strip():
         return text
 
     response = client.responses.create(
         model="gpt-5.1",
         input=[
-            {"role": "system", "content": "Translate the following text to Thai."},
+            {"role": "system", "content": "Translate the following text to Indonesian."},
             {"role": "user", "content": text}
         ],
         reasoning={"effort": "low"},
@@ -57,12 +57,12 @@ def translate_text_to_thai(text):
 
 
 # ===== 使用 OpenAI 翻譯圖片 =====
-def translate_image_to_thai(image_bytes):
-    """使用 OpenAI Vision API 和 Image Edit API 保留原圖並翻譯文字為泰文"""
+def translate_image_to_indonesian(image_bytes):
+    """使用 OpenAI Vision API 和 Image Edit API 保留原圖並翻譯文字為印尼文"""
 
     image_b64 = base64.b64encode(image_bytes).decode("utf-8")
     
-    # 步驟 1: 使用 Responses API 提取中文文字並翻譯成泰文
+    # 步驟 1: 使用 Responses API 提取中文文字並翻譯成印尼文
     print("  [步驟 1] 識別並翻譯文字...")
     response = client.responses.create(
         model="gpt-5.1",
@@ -72,7 +72,7 @@ def translate_image_to_thai(image_bytes):
                 "content": [
                     {
                         "type": "input_text",
-                        "text": "請完整提取這張圖片中的所有中文文字，並將它們翻譯成泰文。請以「原文 -> 泰文」的格式列出所有翻譯。"
+                        "text": "請完整提取這張圖片中的所有中文文字，並將它們翻譯成印尼文。請以「原文 -> 印尼文」的格式列出所有翻譯。"
                     },
                     {
                         "type": "input_image",
@@ -112,7 +112,7 @@ def translate_image_to_thai(image_bytes):
     # 步驟 3: 使用 DALL-E 2 Image Edit API（保留原圖，只修改文字部分）
     print("  [步驟 2] 使用 Image Edit API 編輯圖片...")
     
-    prompt = f"Replace all Chinese text in this image with Thai text according to these translations: {translation_pairs}. Keep everything else exactly the same - same colors, same layout, same design, same images. Only change the text from Chinese to Thai."
+    prompt = f"Replace all Chinese text in this image with Indonesian text according to these translations: {translation_pairs}. Keep everything else exactly the same - same colors, same layout, same design, same images. Only change the text from Chinese to Indonesian."
     
     response = client.images.edit(
             model="gpt-image-1",
@@ -164,7 +164,7 @@ def process_picture_shape(slide, shape):
 
         # 3. 使用 OpenAI 直接翻譯圖片
         print("  [圖片] 使用 OpenAI 翻譯圖片...")
-        translated_image = translate_image_to_thai(img_bytes)
+        translated_image = translate_image_to_indonesian(img_bytes)
         
         new_png = os.path.join(temp_dir, f"translated_{shape.Id}.png")
         with open(new_png, "wb") as f:
@@ -212,14 +212,14 @@ def process_shape(slide, shape, indent="  "):
                     cell = table.Cell(r, c)
                     text = cell.Shape.TextFrame.TextRange.Text.strip()
                     if text:
-                        translated = translate_text_to_thai(text)
+                        translated = translate_text_to_indonesian(text)
                         cell.Shape.TextFrame.TextRange.Text = translated
 
         # 3. 文字框
         elif shape.HasTextFrame:
             text = shape.TextFrame.TextRange.Text.strip()
             if text:
-                translated = translate_text_to_thai(text)
+                translated = translate_text_to_indonesian(text)
                 shape.TextFrame.TextRange.Text = translated
 
         # 4. 圖片 OCR
@@ -242,7 +242,7 @@ for slide in presentation.Slides:
     for shape in list(slide.Shapes):
         process_shape(slide, shape, "  ")
 
-output_path = r"C:\Users\sean.ma\Documents\TextBook\投影片翻譯v2\114年菸害防制宣導講座_泰文.pptx"
+output_path = r"C:\Users\sean.ma\Documents\TextBook\投影片翻譯v2\114年菸害防制宣導講座_印尼文.pptx"
 presentation.SaveAs(os.path.abspath(output_path))
 
 print(f"\n完成! 已輸出：{output_path}")
