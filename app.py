@@ -79,7 +79,10 @@ def download_taifex_data(date=None, save_dir='data'):
         file_size = os.path.getsize(filepath)
         if file_size == 0:
             print(f"警告：下載的檔案大小為 0，可能該日期無資料。")
-            os.remove(filepath)
+            try:
+                os.remove(filepath)
+            except OSError as e:
+                print(f"警告：無法刪除空檔案 - {e}")
             return False
         
         print(f"✓ 成功下載資料至：{filepath}")

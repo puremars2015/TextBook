@@ -4,6 +4,7 @@
 
 import os
 import sys
+import shutil
 from datetime import datetime
 from unittest.mock import patch, MagicMock
 
@@ -41,7 +42,7 @@ def test_directory_creation():
     
     # 確保測試目錄不存在
     if os.path.exists(test_dir):
-        os.rmdir(test_dir)
+        shutil.rmtree(test_dir)
     
     # 嘗試下載（會失敗，但應該會建立目錄）
     app.download_taifex_data('2024-01-15', save_dir=test_dir)
@@ -50,7 +51,8 @@ def test_directory_creation():
     assert os.path.exists(test_dir), "目錄應該被建立"
     
     # 清理
-    os.rmdir(test_dir)
+    if os.path.exists(test_dir):
+        shutil.rmtree(test_dir)
     
     print("✓ 目錄建立測試通過")
 
@@ -64,7 +66,7 @@ def test_default_date():
     
     # 清理
     if os.path.exists('test_data_default'):
-        os.rmdir('test_data_default')
+        shutil.rmtree('test_data_default')
     
     print("✓ 預設日期測試通過")
 
@@ -91,8 +93,8 @@ def test_successful_download(mock_get):
     assert os.path.exists(expected_file), "檔案應該被建立"
     
     # 清理
-    os.remove(expected_file)
-    os.rmdir('test_data_mock')
+    if os.path.exists('test_data_mock'):
+        shutil.rmtree('test_data_mock')
     
     print("✓ 成功下載測試通過（模擬）")
 
