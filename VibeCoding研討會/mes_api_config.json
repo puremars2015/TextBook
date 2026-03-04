@@ -1,0 +1,12 @@
+{
+  "base_url": "https://mes.example.local",
+  "endpoint": "/api/production/today",
+  "token": "",
+  "auth_header": "Authorization",
+  "params": {},
+  "field_map": {
+    "work_order": "work_order",
+    "weight": "weight",
+    "product": "product_name"
+  }
+}
