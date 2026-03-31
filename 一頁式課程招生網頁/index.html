@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>男人說話藝術・約會攻略・寵愛老婆的秘密</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      color: #1a1a2e;
+      background: #0d0d1a;
+      line-height: 1.7;
+    }
+
+    /* ── Color Palette ── */
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #f0d080;
+      --dark: #0d0d1a;
+      --dark2: #16213e;
+      --dark3: #1a1a2e;
+      --text: #e8e8f0;
+      --text-muted: #9999bb;
+      --accent: #7b2d8b;
+      --red: #e63946;
+    }
+
+    /* ── Sticky Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: rgba(13,13,26,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+      padding: 14px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    nav .logo {
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+    nav ul {
+      list-style: none; display: flex; gap: 28px;
+    }
+    nav ul a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+    nav ul a:hover { color: var(--gold); }
+    nav .nav-cta {
+      background: var(--gold); color: #000;
+      padding: 8px 22px; border-radius: 30px;
+      font-weight: 700; font-size: 0.85rem; text-decoration: none;
+      transition: background 0.3s;
+    }
+    nav .nav-cta:hover { background: var(--gold-light); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      background:
+        linear-gradient(160deg, rgba(123,45,139,0.35) 0%, transparent 50%),
+        linear-gradient(0deg, rgba(13,13,26,0.9) 0%, transparent 60%),
+        url('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=1600&q=80') center/cover no-repeat;
+      padding: 120px 20px 80px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 6px 18px; border-radius: 30px;
+      font-size: 0.85rem; letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4.2rem);
+      color: #fff; font-weight: 900;
+      line-height: 1.2; margin-bottom: 20px;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-muted); max-width: 620px; margin: 0 auto 40px;
+    }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #000; font-weight: 800; font-size: 1.05rem;
+      padding: 16px 38px; border-radius: 50px; text-decoration: none;
+      box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(201,168,76,0.5); }
+    .btn-secondary {
+      border: 2px solid var(--gold); color: var(--gold);
+      font-weight: 700; font-size: 1rem;
+      padding: 14px 34px; border-radius: 50px; text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-secondary:hover { background: var(--gold); color: #000; }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 48px;
+      margin-top: 64px; flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat strong { display: block; font-size: 2rem; color: var(--gold); font-weight: 900; }
+    .hero-stat span { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── Section Base ── */
+    section { padding: 90px 20px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      display: inline-block; color: var(--gold); font-size: 0.8rem;
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: #fff; font-weight: 800; line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .section-title span { color: var(--gold); }
+    .section-desc { color: var(--text-muted); max-width: 580px; font-size: 1.05rem; }
+
+    /* ── Pain Points ── */
+    .pain {
+      background: var(--dark2);
+    }
+    .pain-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; margin-top: 48px;
+    }
+    .pain-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 28px;
+    }
+    .pain-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .pain-card h3 { color: #fff; font-size: 1.1rem; margin-bottom: 10px; }
+    .pain-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* ── Courses ── */
+    .courses { background: var(--dark3); }
+    .courses-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px; margin-top: 52px;
+    }
+    .course-card {
+      background: linear-gradient(145deg, rgba(22,33,62,0.9), rgba(13,13,26,0.9));
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .course-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(201,168,76,0.15); }
+    .course-tag {
+      padding: 6px 14px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+    }
+    .tag-1 { background: #c0392b; color: #fff; }
+    .tag-2 { background: #8e44ad; color: #fff; }
+    .tag-3 { background: #c9a84c; color: #000; }
+    .course-body { padding: 26px 28px 30px; }
+    .course-icon { font-size: 2.6rem; margin-bottom: 16px; }
+    .course-card h3 { color: #fff; font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; }
+    .course-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; margin-bottom: 20px; }
+    .course-list { list-style: none; padding: 0; }
+    .course-list li {
+      color: var(--text); font-size: 0.9rem; padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .course-list li::before { content: '✦'; color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Highlights ── */
+    .highlights { background: var(--dark2); }
+    .hl-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px; margin-top: 48px;
+    }
+    .hl-item {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 16px; padding: 28px 24px; text-align: center;
+    }
+    .hl-item .icon { font-size: 2.4rem; margin-bottom: 16px; }
+    .hl-item h4 { color: var(--gold); font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .hl-item p { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* ── Instructor ── */
+    .instructor { background: var(--dark3); }
+    .instructor-inner {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 60px; align-items: center; margin-top: 52px;
+    }
+    .instructor-photo {
+      position: relative;
+    }
+    .instructor-photo img {
+      width: 100%; border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .photo-badge {
+      position: absolute; bottom: -16px; right: -16px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #000; font-weight: 800; font-size: 0.9rem;
+      padding: 14px 20px; border-radius: 14px;
+      text-align: center; line-height: 1.3;
+      box-shadow: 0 8px 24px rgba(201,168,76,0.4);
+    }
+    .instructor-info .name {
+      font-size: 2rem; color: #fff; font-weight: 900; margin-bottom: 6px;
+    }
+    .instructor-info .title {
+      color: var(--gold); font-size: 1rem; margin-bottom: 20px;
+    }
+    .instructor-info p { color: var(--text-muted); margin-bottom: 14px; font-size: 0.97rem; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .tag-list span {
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold); padding: 6px 16px; border-radius: 30px; font-size: 0.85rem;
+    }
+
+    /* ── Testimonials ── */
+    .testimonials { background: var(--dark2); }
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; margin-top: 48px;
+    }
+    .testi-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 28px;
+    }
+    .testi-stars { color: var(--gold); font-size: 1.1rem; margin-bottom: 14px; }
+    .testi-card blockquote {
+      color: var(--text); font-size: 0.97rem; line-height: 1.8;
+      margin-bottom: 20px; font-style: italic;
+    }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), #7b2d8b);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; color: #fff; font-size: 1rem;
+    }
+    .testi-author .info strong { color: #fff; font-size: 0.95rem; display: block; }
+    .testi-author .info span { color: var(--text-muted); font-size: 0.82rem; }
+
+    /* ── Pricing ── */
+    .pricing { background: var(--dark3); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px; margin-top: 52px; max-width: 960px; margin-left: auto; margin-right: auto;
+    }
+    .price-card {
+      background: rgba(22,33,62,0.8);
+      border-radius: 20px; padding: 36px 32px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.3s;
+    }
+    .price-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(145deg, rgba(201,168,76,0.1), rgba(22,33,62,0.9));
+      transform: scale(1.04);
+      box-shadow: 0 20px 60px rgba(201,168,76,0.2);
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+    .price-label { color: var(--gold); font-size: 0.8rem; letter-spacing: 2px; font-weight: 700; margin-bottom: 10px; }
+    .price-card h3 { color: #fff; font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; }
+    .price-amount { margin-bottom: 24px; }
+    .price-amount .currency { color: var(--gold); font-size: 1.4rem; vertical-align: top; margin-top: 8px; display: inline-block; }
+    .price-amount .number { color: #fff; font-size: 3.2rem; font-weight: 900; }
+    .price-amount .period { color: var(--text-muted); font-size: 0.9rem; }
+    .price-features { list-style: none; margin-bottom: 28px; }
+    .price-features li {
+      padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--text); font-size: 0.93rem; display: flex; gap: 8px; align-items: center;
+    }
+    .price-features li::before { content: '✓'; color: var(--gold); font-weight: 700; }
+    .price-features .no { color: var(--text-muted); }
+    .price-features .no::before { content: '✗'; color: #555; }
+    .btn-enroll {
+      width: 100%; display: block; text-align: center;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #000; font-weight: 800; font-size: 1rem;
+      padding: 14px; border-radius: 12px; text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .btn-enroll:hover { opacity: 0.88; }
+    .btn-enroll-outline {
+      width: 100%; display: block; text-align: center;
+      border: 2px solid rgba(201,168,76,0.5); color: var(--gold);
+      font-weight: 800; font-size: 1rem;
+      padding: 14px; border-radius: 12px; text-decoration: none;
+      transition: background 0.3s;
+    }
+    .btn-enroll-outline:hover { background: rgba(201,168,76,0.1); }
+
+    /* ── FAQ ── */
+    .faq { background: var(--dark2); }
+    .faq-list { max-width: 780px; margin: 48px auto 0; }
+    .faq-item {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; margin-bottom: 12px; overflow: hidden;
+    }
+    .faq-q {
+      width: 100%; background: rgba(255,255,255,0.04);
+      color: #fff; font-size: 1rem; font-weight: 600;
+      padding: 20px 24px; text-align: left; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.3s;
+    }
+    .faq-q:hover { background: rgba(201,168,76,0.08); }
+    .faq-q .arrow { color: var(--gold); font-size: 1.2rem; transition: transform 0.3s; }
+    .faq-q.open .arrow { transform: rotate(45deg); }
+    .faq-a {
+      display: none; padding: 0 24px 20px;
+      color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;
+      background: rgba(255,255,255,0.02);
+    }
+    .faq-a.open { display: block; }
+
+    /* ── CTA Banner ── */
+    .cta-banner {
+      background: linear-gradient(135deg, #7b2d8b 0%, #c9a84c 100%);
+      text-align: center; padding: 90px 20px;
+    }
+    .cta-banner h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: #fff; font-weight: 900; margin-bottom: 16px;
+    }
+    .cta-banner p { color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 36px; }
+    .cta-banner .hint { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 16px; }
+
+    /* ── Footer ── */
+    footer {
+      background: #08080f;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    /* ── Floating CTA ── */
+    .float-cta {
+      position: fixed; bottom: 28px; right: 28px; z-index: 888;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #000; font-weight: 800; font-size: 0.95rem;
+      padding: 14px 28px; border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(201,168,76,0.5);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 8px 30px rgba(201,168,76,0.4); }
+      50% { box-shadow: 0 12px 50px rgba(201,168,76,0.7); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .instructor-inner { grid-template-columns: 1fr; }
+      .instructor-photo img { max-height: 380px; object-fit: cover; }
+      .photo-badge { right: 12px; bottom: -12px; }
+      .price-card.featured { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <div class="logo">男人說話藝術 ✦</div>
+  <ul>
+    <li><a href="#courses">課程內容</a></li>
+    <li><a href="#instructor">師資</a></li>
+    <li><a href="#testimonials">學員見證</a></li>
+    <li><a href="#pricing">立即報名</a></li>
+    <li><a href="#faq">常見Q&A</a></li>
+  </ul>
+  <a href="#pricing" class="nav-cta">搶先報名 →</a>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero" id="home">
+  <div>
+    <div class="hero-badge">🔥 2026 最強男性魅力培訓計畫</div>
+    <h1>讓你的<span>每一句話</span>，<br/>都讓她心動</h1>
+    <p>從說話藝術、約會技巧到寵愛老婆的秘訣，三大核心模組幫你成為她生命中最重要的那個男人。</p>
+    <div class="hero-btns">
+      <a href="#pricing" class="btn-primary">立即搶先報名</a>
+      <a href="#courses" class="btn-secondary">查看課程內容</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>1,200+</strong><span>已結業學員</span></div>
+      <div class="hero-stat"><strong>96%</strong><span>學員好評率</span></div>
+      <div class="hero-stat"><strong>3 大</strong><span>核心模組</span></div>
+      <div class="hero-stat"><strong>終身</strong><span>課程回看權</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pain Points ── -->
+<section class="pain" id="pain">
+  <div class="container">
+    <span class="section-label">你有這些困擾嗎？</span>
+    <h2 class="section-title">很多男人都<span>在這裡卡關</span></h2>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">😶</div>
+        <h3>不知道說什麼好</h3>
+        <p>和女生相處時腦袋空白、說話無聊乾澀，完全不知道怎麼開啟有趣的話題。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📱</div>
+        <h3>約會不知道怎麼安排</h3>
+        <p>邀請出去卻總是被拒絕，或者約出來後不知道怎麼製造氛圍，關係停滯不前。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">💔</div>
+        <h3>老婆漸漸不滿足</h3>
+        <p>結婚後關係越來越平淡，不知道如何維持熱情，讓另一半感受到你的用心與愛意。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🤐</div>
+        <h3>說錯話讓她生氣</h3>
+        <p>明明好意卻踩到地雷，每次溝通都變成爭吵，搞不懂她在想什麼。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🧊</div>
+        <h3>缺乏魅力與自信</h3>
+        <p>感覺自己不夠有趣、不夠吸引人，總是在感情上處於被動的一方。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔄</div>
+        <h3>不斷重複同樣的錯誤</h3>
+        <p>看了很多書、影片，卻都是理論，不知道如何真正應用在現實生活中。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Courses ── -->
+<section class="courses" id="courses">
+  <div class="container">
+    <span class="section-label">課程模組</span>
+    <h2 class="section-title">三大核心課程，<span>全面升級你的魅力</span></h2>
+    <p class="section-desc">每個模組由淺入深，理論 + 實戰演練並重，讓你學完就能立即應用。</p>
+    <div class="courses-grid">
+
+      <!-- Module 1 -->
+      <div class="course-card">
+        <div class="course-tag tag-1">MODULE 01</div>
+        <div class="course-body">
+          <div class="course-icon">🎤</div>
+          <h3>男人說話藝術</h3>
+          <p>說話是最強大的魅力工具。學會如何用語言吸引注意、引發共鳴，讓你在任何場合都能侃侃而談、充滿自信。</p>
+          <ul class="course-list">
+            <li>第一印象語言設計：開口就讓人想繼續聽</li>
+            <li>幽默感培養：讓對話充滿笑聲的秘訣</li>
+            <li>深度聊天術：從表面話題挖掘真實連結</li>
+            <li>讚美的藝術：真誠而不肉麻的說法</li>
+            <li>化解尷尬的萬用話術</li>
+            <li>說話節奏与語調的魅力化訓練</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Module 2 -->
+      <div class="course-card">
+        <div class="course-tag tag-2">MODULE 02</div>
+        <div class="course-body">
+          <div class="course-icon">💫</div>
+          <h3>約會攻略全指南</h3>
+          <p>從主動邀約到製造難忘回憶，手把手教你打造每一次約會都讓她想要下一次。</p>
+          <ul class="course-list">
+            <li>主動邀約話術：被接受率提升 80%</li>
+            <li>約會場地選擇與氛圍設計</li>
+            <li>製造「心動時刻」的互動技巧</li>
+            <li>肢體語言與眼神交流的運用</li>
+            <li>如何自然發展關係的進退節奏</li>
+            <li>異地/忙碌族的維繫感情術</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Module 3 -->
+      <div class="course-card">
+        <div class="course-tag tag-3">MODULE 03</div>
+        <div class="course-body">
+          <div class="course-icon">💍</div>
+          <h3>寵愛老婆的秘密</h3>
+          <p>婚姻不是感情的終點，而是愛情的升級版。學會讓老婆每天都感受到你的愛，讓婚姻長久保持甜蜜。</p>
+          <ul class="course-list">
+            <li>了解另一半「愛的語言」類型</li>
+            <li>日常小儀式讓她感受被重視</li>
+            <li>吵架後快速和好的溝通術</li>
+            <li>驚喜策劃：低成本高感動的方式</li>
+            <li>家庭責任分工中的感情維繫</li>
+            <li>讓婚姻持續保鮮的長期策略</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Highlights ── -->
+<section class="highlights" id="highlights">
+  <div class="container">
+    <span class="section-label">課程特色</span>
+    <h2 class="section-title">為什麼選擇<span>我們的課程</span>？</h2>
+    <div class="hl-grid">
+      <div class="hl-item">
+        <div class="icon">🎯</div>
+        <h4>實戰導向</h4>
+        <p>每堂課配有真實情境演練，不只學理論，更要學會怎麼用。</p>
+      </div>
+      <div class="hl-item">
+        <div class="icon">📹</div>
+        <h4>影片永久回看</h4>
+        <p>購課後終身可回看所有教學影片，隨時複習不怕過期。</p>
+      </div>
+      <div class="hl-item">
+        <div class="icon">💬</div>
+        <h4>私密社群支援</h4>
+        <p>加入學員專屬社群，與同學互相鼓勵、分享實戰心得。</p>
+      </div>
+      <div class="hl-item">
+        <div class="icon">🙋</div>
+        <h4>Q&A 直播答疑</h4>
+        <p>每月舉辦線上直播 Q&A，直接向講師提問你的困惑。</p>
+      </div>
+      <div class="hl-item">
+        <div class="icon">📝</div>
+        <h4>配套學習手冊</h4>
+        <p>精心設計的 PDF 學習手冊，幫你整理重點、制訂行動計劃。</p>
+      </div>
+      <div class="hl-item">
+        <div class="icon">🔒</div>
+        <h4>30 天退款保障</h4>
+        <p>不滿意全額退款，零風險讓你放心嘗試。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Instructor ── -->
+<section class="instructor" id="instructor">
+  <div class="container">
+    <span class="section-label">師資介紹</span>
+    <h2 class="section-title">你的<span>魅力導師</span></h2>
+    <div class="instructor-inner">
+      <div class="instructor-photo">
+        <img src="instructor.jpg" alt="講師照片" />
+        <div class="photo-badge">10 年<br/>輔導經驗</div>
+      </div>
+      <div class="instructor-info">
+        <div class="name">Doctor 嚴</div>
+        <div class="title">男性魅力培訓師・關係溝通顧問</div>
+        <p>曾任企業溝通培訓師超過十年，專注研究男性說話魅力與親密關係心理學，輔導超過 <strong style="color:#fff">1,200 位男性</strong>從備受忽視到成為另一半眼中最閃耀的存在。</p>
+        <p>深信每個男人都有讓女人深深愛上的潛力，只需要找到對的表達方式。課程融合 NLP、愛的語言理論、行為心理學與真實場景演練，讓你一學就上手。</p>
+        <p>著有《開口就讓她心動》暢銷電子書，累計下載超過 50,000 次。</p>
+        <div class="tag-list">
+          <span>NLP 認證培訓師</span>
+          <span>關係心理諮詢</span>
+          <span>企業溝通培訓</span>
+          <span>愛的語言專家</span>
+          <span>TEDx 講者</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ── -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <span class="section-label">學員見證</span>
+    <h2 class="section-title">他們已經<span>改變了</span></h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>「上完第一個模組後，我和女朋友的對話品質整個提升。她說我現在說話比以前有趣多了，我們也更少吵架了。這門課真的很值得！」</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">志</div>
+          <div class="info"><strong>林志偉</strong><span>32 歲・工程師</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>「結婚五年後，老婆說她感覺我們像新婚一樣。我才知道原來小小的行動和說話方式可以有這麼大的改變。謝謝 Doctor 嚴！」</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">建</div>
+          <div class="info"><strong>王建宇</strong><span>38 歲・業務主管</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>「以前約會都不知道要說什麼，沉默了就很尷尬。現在不只話題不斷，還會製造浪漫時刻。課程中的技巧都非常實用！」</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">俊</div>
+          <div class="info"><strong>陳俊男</strong><span>27 歲・行銷企劃</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>「原本以為是老生常談的內容，但聽完才發現完全不是。講師分析的角度很獨到，每個案例都讓我恍然大悟，強烈推薦！」</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">明</div>
+          <div class="info"><strong>張明翰</strong><span>45 歲・創業家</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>「我老婆說我現在比談戀愛時還誓言了！那個驚喜策劃的單元超實用，她生日那天完全被我感動哭。這輩子學過最值的課！」</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">家</div>
+          <div class="info"><strong>吳家豪</strong><span>35 歲・教師</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>「一開始有點懷疑，但看完試看影片就決定報名了。Alex 老師說話很生動，課程節奏完全不會無聊，而且真的有用！」</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar">永</div>
+          <div class="info"><strong>黃永誠</strong><span>29 歲・財務分析師</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pricing ── -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <span class="section-label">課程方案</span>
+    <h2 class="section-title" style="text-align:center">選擇適合你的<span>學習方案</span></h2>
+    <p class="section-desc" style="text-align:center; margin: 0 auto 0;">限時早鳥優惠，額滿為止</p>
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div class="price-label">基礎方案</div>
+        <h3>單一模組</h3>
+        <div class="price-amount">
+          <span class="currency">NT$</span>
+          <span class="number">2,980</span>
+          <span class="period"> / 模組</span>
+        </div>
+        <ul class="price-features">
+          <li>任選一個核心模組</li>
+          <li>課程影片永久回看</li>
+          <li>PDF 學習手冊</li>
+          <li class="no">私密學員社群</li>
+          <li class="no">月度 Q&A 直播</li>
+          <li class="no">一對一諮詢</li>
+        </ul>
+        <a href="#enroll" class="btn-enroll-outline">選擇基礎方案</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-label">⭐ 最受歡迎</div>
+        <h3>完整三模組</h3>
+        <div class="price-amount">
+          <span class="currency">NT$</span>
+          <span class="number">6,980</span>
+          <span class="period"> / 全課程</span>
+        </div>
+        <ul class="price-features">
+          <li>三大模組全部收錄</li>
+          <li>課程影片永久回看</li>
+          <li>PDF 學習手冊</li>
+          <li>私密學員社群</li>
+          <li>月度 Q&A 直播（1年）</li>
+          <li class="no">一對一諮詢</li>
+        </ul>
+        <a href="#enroll" class="btn-enroll">立即報名 → 馬上開始</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-label">VIP 方案</div>
+        <h3>全程 VIP 陪跑</h3>
+        <div class="price-amount">
+          <span class="currency">NT$</span>
+          <span class="number">12,800</span>
+          <span class="period"> / 全包</span>
+        </div>
+        <ul class="price-features">
+          <li>三大模組全部收錄</li>
+          <li>課程影片永久回看</li>
+          <li>PDF 學習手冊</li>
+          <li>私密學員社群</li>
+          <li>月度 Q&A 直播（終身）</li>
+          <li>3 次一對一線上諮詢</li>
+        </ul>
+        <a href="#enroll" class="btn-enroll-outline">選擇 VIP 方案</a>
+      </div>
+
+    </div>
+    <p style="text-align:center; color: var(--text-muted); margin-top: 28px; font-size: 0.88rem;">✦ 所有方案均享 30 天無條件退款保障 ✦</p>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq" id="faq">
+  <div class="container">
+    <span class="section-label">常見問題</span>
+    <h2 class="section-title" style="text-align:center">你可能想<span>知道的</span></h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          課程適合哪些人？<span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          本課程適合所有年齡層的男性：單身想提升吸引力的、剛開始約會想增加成功率的、已婚想讓婚姻更甜蜜的，只要你願意投入學習並付諸行動，課程都能帶給你明顯的改變。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          購課後多久可以開始學習？<span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          付款成功後您將收到電子郵件，其中包含登入帳號與密碼，通常在 30 分鐘內完成開通。即可登入學習平台立即開始觀看課程。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          課程影片可以看多久？<span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          所有課程影片均提供「終身回看」權限，只要平台存在，你就可以隨時登入觀看，沒有任何時間限制。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          如果學了沒效果怎麼辦？<span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          我們提供 30 天無條件退款保障。如果你在 30 天內覺得課程對你沒有幫助，只需傳送一封 Email 給我們，我們將全額退款，不需要任何理由。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          課程是線上還是實體？<span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          主課程為預錄線上影音課程，方便你在任何時間、任何地點按自己的節奏學習。另外 VIP 方案及完整方案包含的定期 Q&A 則為線上直播形式，也會提供錄影回放。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          我沒有感情對象，也適合上嗎？<span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          非常適合！說話藝術和說話魅力的提升不僅用在感情中，在職場、社交場合都能讓你更有影響力。而且提前學習，等到遇見心儀的對象時你就已經準備好了！
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA Banner ── -->
+<section class="cta-banner" id="enroll">
+  <div class="container">
+    <h2>現在就開始，成為她最愛的男人</h2>
+    <p>早鳥優惠名額有限，不要讓猶豫成為你改變的阻礙</p>
+    <a href="#pricing" class="btn-primary" style="display:inline-block; font-size: 1.1rem; padding: 18px 48px;">
+      🔥 立即報名，限時優惠
+    </a>
+    <p class="hint">✦ 30 天退款保障・終身回看・加入 1,200+ 學員行列 ✦</p>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>© 2026 男人說話藝術 · All Rights Reserved</p>
+  <p style="margin-top: 8px;">
+    <a href="#">隱私政策</a> &nbsp;|&nbsp; <a href="#">服務條款</a> &nbsp;|&nbsp; <a href="#">聯絡我們</a>
+  </p>
+</footer>
+
+<!-- Floating CTA -->
+<a href="#pricing" class="float-cta">立即報名 🔥</a>
+
+<script>
+  function toggleFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
+    // Open clicked if it wasn't open
+    if (!isOpen) {
+      answer.classList.add('open');
+      btn.classList.add('open');
+    }
+  }
+
+  // Smooth nav highlight
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav ul a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? '#c9a84c' : '';
+    });
+  });
+</script>
+</body>
+</html>
