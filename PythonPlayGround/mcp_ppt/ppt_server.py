@@ -240,6 +240,111 @@ def add_slide(file_path: str, title: str, content: str) -> dict:
 
 
 @mcp.tool()
+def list_layouts(file_path: str) -> dict:
+    """
+    列出 PowerPoint 文件中所有可用的版面配置
+    
+    Args:
+        file_path: PPT 文件的完整路径
+        
+    Returns:
+        包含所有版面配置信息的字典
+    """
+    try:
+        # 打开文件
+        result = ppt_handler.open_powerpoint(file_path)
+        if not result["success"]:
+            return result
+        
+        layouts_info = []
+        
+        # 遍历所有版面配置
+        design = ppt_handler.presentation.Designs(1)
+        for i in range(1, design.SlideMaster.CustomLayouts.Count + 1):
+            layout = design.SlideMaster.CustomLayouts(i)
+            layout_info = {
+                "index": i,
+                "name": layout.Name,
+                "layout_type": layout.Layout
+            }
+            layouts_info.append(layout_info)
+        
+        return {
+            "success": True,
+            "file_name": result["file_name"],
+            "layout_count": len(layouts_info),
+            "layouts": layouts_info
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+@mcp.tool()
+def add_slide_with_layout(file_path: str, layout_type: str) -> dict:
+    """
+    添加新的投影片并指定版型
+    
+    Args:
+        file_path: PPT 文件的完整路径
+        layout_type: 版型类型，可选值：
+            - "title": 标题投影片
+            - "text": 标题和内容
+            - "blank": 空白
+            - "title_only": 仅标题
+            - "two_objects": 两个对象
+            - "object": 单个对象
+            - "vertical_text": 垂直文本
+            - "chart": 图表
+            - "table": 表格
+        
+    Returns:
+        包含操作结果的字典
+    """
+    try:
+        # 打开文件
+        result = ppt_handler.open_powerpoint(file_path)
+        if not result["success"]:
+            return result
+        
+        # 版型映射
+        layout_map = {
+            "title": 1,           # ppLayoutTitle
+            "text": 2,            # ppLayoutText
+            "chart": 3,           # ppLayoutChart
+            "table": 5,           # ppLayoutTable
+            "object": 6,          # ppLayoutObject
+            "blank": 7,           # ppLayoutBlank
+            "vertical_text": 8,   # ppLayoutVerticalText
+            "two_objects": 11,    # ppLayoutTwoObjects
+            "title_only": 12      # ppLayoutTitleOnly
+        }
+        
+        if layout_type not in layout_map:
+            return {
+                "success": False,
+                "error": f"无效的版型类型。可选值: {', '.join(layout_map.keys())}"
+            }
+        
+        # 添加新投影片
+        slide_index = ppt_handler.presentation.Slides.Count + 1
+        layout_number = layout_map[layout_type]
+        slide = ppt_handler.presentation.Slides.Add(slide_index, layout_number)
+        
+        # 保存文件
+        ppt_handler.presentation.Save()
+        
+        return {
+            "success": True,
+            "message": f"成功添加新投影片（第 {slide_index} 张），版型: {layout_type}",
+            "slide_number": slide_index,
+            "layout_type": layout_type,
+            "layout_number": layout_number
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+@mcp.tool()
 def update_table(file_path: str, slide_number: int, table_index: int, row: int, col: int, text: str) -> dict:
     """
     修改投影片上表格的内容
@@ -584,12 +689,14 @@ if __name__ == "__main__":
     print("可用工具:")
     print("  1. read_ppt - 读取 PowerPoint 文件内容")
     print("  2. write_to_ppt - 写入文字到指定位置")
-    print("  3. add_slide - 添加新投影片")
-    print("  4. update_table - 修改表格单个单元格内容")
-    print("  5. update_table_row - 一次写入表格一整行数据")
-    print("  6. delete_table_row - 删除表格中的指定行")
-    print("  7. read_table - 读取表格内容")
-    print("  8. close_ppt - 关闭当前打开的文件")
+    print("  3. add_slide - 添加新投影片（标题+内容）")
+    print("  4. add_slide_with_layout - 添加新投影片并指定版型")
+    print("  5. list_layouts - 列出所有可用的版面配置")
+    print("  6. update_table - 修改表格单个单元格内容")
+    print("  7. update_table_row - 一次写入表格一整行数据")
+    print("  8. delete_table_row - 删除表格中的指定行")
+    print("  9. read_table - 读取表格内容")
+    print(" 10. close_ppt - 关闭当前打开的文件")
     print("=" * 60)
     print("提示: 文件会保持打开状态，完成所有操作后请使用 close_ppt 关闭")
     print("=" * 60)

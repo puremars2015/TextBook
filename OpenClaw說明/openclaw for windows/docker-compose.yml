@@ -1,0 +1,31 @@
+name: openclaw
+
+services:
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw
+    privileged: true
+
+    ports:
+      - "18789:18789"
+
+    volumes:
+      # 你的 OpenClaw 設定（核心）
+      - type: bind
+        source: 'C:\Users\purem\.openclaw'
+        target: /home/node/.openclaw
+
+      # 掛載 Windows C 槽，供容器內讀寫檔案
+      - type: bind
+        source: 'C:\'
+        target: /host/c
+
+      # 額外資料（可選）
+      - type: bind
+        source: ./data
+        target: /app/data
+
+    environment:
+      - TZ=Asia/Taipei
+
+    restart: unless-stopped
