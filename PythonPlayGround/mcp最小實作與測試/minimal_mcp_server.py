@@ -56,12 +56,5 @@ def write_txt(filepath: str, content: str, mode: str = 'w'):
         return f"寫入失敗: {str(e)}"
 
 if __name__ == '__main__':
-    # 在啟動伺服器前,取得底層的 Starlette app 並新增路由
-    import uvicorn
-    
-    # 建立 Starlette app 並新增自訂路由
-    app = mcp.streamable_http_app()
-    # app.add_route("/openapi.yaml", openapi_manifest, methods=["GET"])
-    
-    # 啟動伺服器
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    # 使用 FastMCP 提供的方法啟動伺服器
+    mcp.run(transport='sse', host="127.0.0.1", port=8000)

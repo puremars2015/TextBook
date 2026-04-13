@@ -1,4 +1,2 @@
-fastmcp>=2.0.0
-python-pptx>=0.6.21
-pydantic>=2.0.0
-
+pywin32
+fastmcp

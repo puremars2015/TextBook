@@ -1,0 +1,66 @@
+# 註: 以下代碼都可以貼到Power Automate Desktop執行
+
+# 變數範例
+SET 一句話 TO $'''你好,今天你過的好馬??'''
+SET 一個數字 TO 100
+SET 一個人 TO { 'Name': 'Sean', 'Age': '40' }
+Variables.ConvertCustomObjectToJson CustomObject: 一個人 Json=> CustomObjectAsJson
+Variables.ConvertJsonToCustomObject Json: CustomObjectAsJson CustomObject=> JsonAsCustomObject
+Display.ShowMessageDialog.ShowMessage Title: $'''Hola como esta!''' Message: JsonAsCustomObject Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed
+
+
+# IF條件判斷範例-數字判斷
+SET 金額 TO 200
+IF 金額 > 100 THEN
+    Display.ShowMessageDialog.ShowMessage Title: $'''寄送審核通知''' Message: $'''寄送!!''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+ELSE
+    Display.ShowMessageDialog.ShowMessage Title: $'''審核''' Message: $'''核准!!''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+END
+
+# IF條件判斷範例-文字比對
+SET 一篇文章 TO $'''他第一次意識到人生不是直線，是在三十歲那年。
+
+那天晚上，他加班到很晚，走出辦公室時，街道已經空了。路燈一盞一盞亮著，像一條不確定方向的指引。他忽然想起小時候寫過的一篇作文，標題叫《我的未來》，裡面寫得很清楚：幾歲畢業、幾歲成功、幾歲功成名就。當時他相信，只要照著計畫走，人生就會乖乖配合。
+
+但現實不是這樣。
+
+他曾為了「穩定」放棄熱愛的事，也曾為了「責任」忍下不甘心的選擇。有些門關上時沒有聲音，等他回頭，才發現再也推不開。有些錯誤看似微小，卻在多年後才顯現重量。
+
+直到父親生病那年，他開始重新理解「時間」。
+
+醫院走廊很長，腳步聲空洞。他陪父親做復健，看著那個曾經無所不能的人，慢慢學著重新站穩。父親笑著說：「人生啊，不是一直往前走，有時候是學會停下來。」
+
+那句話很普通，卻在他心裡留了很久。
+
+後來，他開始允許自己改變方向。不是因為失敗，而是因為明白。他學會不把每個選擇都當成「最後一次」，也不再急著向別人證明什麼。有些日子仍然平凡，有些夜晚仍然迷惘，但他不再那麼害怕。
+
+因為他終於懂了：
+人生不是一條一定要走到終點的路，而是一段需要不斷調整步伐的旅程。
+重要的不是走得多快，而是是否清楚自己為何而走。
+
+有一天，他再度走在夜晚的街道上。路燈依舊，但心境不同了。他知道前方不一定明亮，也不一定正確，但那是屬於他的方向。
+
+而這，就已經足夠。
+'''
+IF Contains(一篇文章, $'''《我的未來》''', False) THEN
+    Display.ShowMessageDialog.ShowMessage Title: $'''一篇文章的檢查結果''' Message: $'''此文章有提到\"我的未來\"''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+END
+
+
+
+
+# switch&case條件判斷範例-數字判斷
+SET 小馬哥的電腦考試成績 TO 88
+SWITCH 小馬哥的電腦考試成績
+    CASE >= 90
+        Display.ShowMessageDialog.ShowMessage Title: $'''小馬哥的電腦學期成績等第''' Message: $'''優''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+    CASE >= 80
+        Display.ShowMessageDialog.ShowMessage Title: $'''小馬哥的電腦學期成績等第''' Message: $'''甲''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+    CASE >= 70
+        Display.ShowMessageDialog.ShowMessage Title: $'''小馬哥的電腦學期成績等第''' Message: $'''乙''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+    CASE >= 60
+        Display.ShowMessageDialog.ShowMessage Title: $'''小馬哥的電腦學期成績等第''' Message: $'''丙''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+    CASE < 60
+        Display.ShowMessageDialog.ShowMessage Title: $'''小馬哥的電腦學期成績等第''' Message: $'''不及格''' Icon: Display.Icon.None Buttons: Display.Buttons.OK DefaultButton: Display.DefaultButton.Button1 IsTopMost: False
+END
+
