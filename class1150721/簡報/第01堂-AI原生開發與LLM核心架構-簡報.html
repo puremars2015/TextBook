@@ -139,7 +139,7 @@
       <li>說明大語言模型（LLM）的基本原理與主要產業應用場景</li>
       <li>描述 AI Agent 的系統架構與四大核心組成</li>
       <li>體驗 Vibe Coding 的開發方式，並理解其長處與限制</li>
-      <li>認識 OpenClaw 平台的基礎概念</li>
+      <li>認識 Hermes 平台的基礎概念</li>
       <li>識別使用 LLM 所衍生的基本資安風險</li>
     </ul>
   </section>
@@ -288,18 +288,27 @@
     </table>
   </section>
 
-  <!-- 11 OpenClaw -->
+  <!-- 11 Hermes -->
   <section class="slide">
     <div class="kicker">核心概念 4</div>
-    <h2>OpenClaw 平台簡介</h2>
-    <p><strong>OpenClaw</strong> 是目前產業廣泛採用的 AI Agent 視覺化開發平台，讓使用者以<strong>拖拉積木</strong>的方式組合 AI 工作流程，大幅降低 Agent 系統的開發難度。</p>
+    <h2>Hermes 平台簡介</h2>
+    <p><strong>Hermes Agent</strong> 是一套開源的 AI Agent 閘道器，透過 Docker 或原生安裝部署，將 LLM 與訊息平台（Telegram、Discord）及各式工具串接起來，讓使用者像聊天一樣操作 Agent。</p>
+    <div class="flow" style="margin:1rem 0;">
+      <div class="box">Telegram / Discord</div>
+      <div class="arrow">↓</div>
+      <div class="box">Hermes Gateway<small>閘道器</small></div>
+      <div class="arrow">↓</div>
+      <div class="box">Agent（大腦）<small>你在對話的 AI</small></div>
+      <div class="arrow">↓</div>
+      <div class="box">Tools（手）<small>瀏覽器、終端機、檔案、搜尋、排程…</small></div>
+    </div>
     <ul>
-      <li>直覺的視覺化流程編輯介面</li>
-      <li>支援串接多種 LLM 後端（GPT、Claude、Llama 等）</li>
-      <li>內建豐富的工具節點：網頁搜尋、讀取檔案、呼叫 API、資料庫操作等</li>
-      <li>支援多個 Agent 相互協作完成複雜任務</li>
+      <li>開源、可自架部署，資料掌握在自己手上</li>
+      <li>透過 Gateway 串接多種訊息平台，用聊天介面操作 Agent</li>
+      <li>內建瀏覽器操作、網頁搜尋、Cron Job 定時監控等工具</li>
+      <li>支援條件觸發推播，避免資訊轟炸；提供 Control UI 視覺化管理</li>
     </ul>
-    <p class="muted">本課程後續堂次將實際使用 OpenClaw 構建各種自動化 Agent 系統。</p>
+    <p class="muted">本課程後續堂次將實際使用 Hermes Agent 構建各種自動化查詢與監控系統。</p>
   </section>
 
   <!-- 12 security -->
