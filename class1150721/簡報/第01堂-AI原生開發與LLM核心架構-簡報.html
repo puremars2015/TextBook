@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>第01堂｜AI原生開發與LLM核心架構</title>
+<style>
+  :root{
+    --bg-1:#0b1020;
+    --bg-2:#131b34;
+    --accent:#6ee7ff;
+    --accent-2:#a78bfa;
+    --text:#eef2ff;
+    --muted:#9aa4c7;
+    --card:#161f3d;
+    --card-border:#2a3560;
+    --good:#4ade80;
+    --bad:#f87171;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%;
+    background:radial-gradient(1200px 800px at 80% -10%, #1c2a56 0%, var(--bg-1) 55%), var(--bg-1);
+    font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+    color:var(--text);
+    overflow:hidden;
+  }
+  .deck{position:relative; width:100vw; height:100vh;}
+  .slide{
+    position:absolute; inset:0;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    padding:6vh 8vw;
+    opacity:0;
+    transform:translateY(16px);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  .slide.active{display:flex; opacity:1; transform:translateY(0);}
+  .kicker{
+    font-size:1rem; letter-spacing:.12em; color:var(--accent);
+    text-transform:uppercase; margin-bottom:.6rem; font-weight:700;
+  }
+  h1{font-size:2.6rem; margin:0 0 .4rem 0; line-height:1.25;}
+  h2{font-size:2.1rem; margin:0 0 1.1rem 0; color:var(--text); border-left:6px solid var(--accent); padding-left:.6rem;}
+  h3{font-size:1.3rem; color:var(--accent-2); margin:1.2rem 0 .5rem;}
+  p{font-size:1.15rem; line-height:1.75; color:var(--text);}
+  .muted{color:var(--muted);}
+  .lead{font-size:1.35rem; color:var(--muted); margin-top:.6rem;}
+  ul{font-size:1.15rem; line-height:1.85;}
+  li{margin-bottom:.35rem;}
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:2.5rem; align-items:start;}
+  .card{
+    background:var(--card); border:1px solid var(--card-border); border-radius:16px;
+    padding:1.4rem 1.6rem; box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  table{border-collapse:collapse; width:100%; font-size:1.05rem;}
+  th,td{border:1px solid var(--card-border); padding:.7rem .9rem; text-align:left;}
+  th{background:#1b2550; color:var(--accent);}
+  tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+  code, pre{font-family:"JetBrains Mono","Cascadia Code",Consolas,monospace;}
+  pre{
+    background:#0d1224; border:1px solid var(--card-border); border-radius:14px;
+    padding:1.2rem 1.4rem; font-size:1rem; line-height:1.6; overflow:auto;
+    color:#d5e2ff; max-height:60vh;
+  }
+  .tag{
+    display:inline-block; padding:.25rem .7rem; border-radius:999px;
+    font-size:.85rem; font-weight:700; margin-right:.4rem;
+  }
+  .tag.good{background:rgba(74,222,128,.15); color:var(--good); border:1px solid rgba(74,222,128,.4);}
+  .tag.bad{background:rgba(248,113,113,.15); color:var(--bad); border:1px solid rgba(248,113,113,.4);}
+  .flow{display:flex; flex-direction:column; align-items:center; gap:.4rem; font-size:1.1rem;}
+  .flow .box{
+    background:var(--card); border:1px solid var(--accent); border-radius:12px;
+    padding:.9rem 1.6rem; min-width:280px; text-align:center; font-weight:700;
+  }
+  .flow .box small{display:block; font-weight:400; color:var(--muted); margin-top:.2rem;}
+  .flow .arrow{color:var(--accent); font-size:1.4rem;}
+  .title-wrap{text-align:center; margin:auto;}
+  .title-wrap h1{font-size:3.2rem;}
+  .badge{
+    display:inline-block; background:var(--card); border:1px solid var(--accent);
+    border-radius:999px; padding:.4rem 1.2rem; color:var(--accent); font-weight:700;
+    margin-bottom:1.6rem; letter-spacing:.05em;
+  }
+  .footer-quote{
+    background:rgba(167,139,250,.08); border-left:4px solid var(--accent-2);
+    padding:1rem 1.4rem; border-radius:0 12px 12px 0; margin-top:1.2rem; font-size:1.05rem; color:var(--text);
+  }
+  .progress{position:fixed; top:0; left:0; height:4px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); transition:width .3s ease; z-index:20;}
+  .pageno{position:fixed; right:2.2rem; bottom:1.6rem; color:var(--muted); font-size:.95rem; letter-spacing:.05em; z-index:20;}
+  .navhint{position:fixed; left:2.2rem; bottom:1.6rem; color:var(--muted); font-size:.9rem; z-index:20;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;}
+  .step{
+    background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:1.1rem 1.3rem;
+  }
+  .step .num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:28px; height:28px; border-radius:50%; background:var(--accent); color:#04121c;
+    font-weight:800; margin-right:.5rem;
+  }
+  .navbtn{
+    position:fixed; top:50%; transform:translateY(-50%); z-index:20;
+    background:rgba(255,255,255,.05); border:1px solid var(--card-border); color:var(--text);
+    width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:1.3rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .navbtn:hover{background:rgba(255,255,255,.12);}
+  #prevBtn{left:1.4rem;} #nextBtn{right:1.4rem;}
+  .small{font-size:.95rem; color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="pageno" id="pageno"></div>
+<div class="navhint">← → 或 空白鍵 翻頁</div>
+<button class="navbtn" id="prevBtn">‹</button>
+<button class="navbtn" id="nextBtn">›</button>
+
+<div class="deck" id="deck">
+
+  <!-- 1 title -->
+  <section class="slide active">
+    <div class="title-wrap">
+      <div class="badge">2026 秋季班 ｜ 7/21 第01堂</div>
+      <h1>AI原生開發與LLM核心架構</h1>
+      <p class="lead">從語言模型到 AI Agent：建立本課程的共同知識地基</p>
+    </div>
+  </section>
+
+  <!-- 2 objectives -->
+  <section class="slide">
+    <div class="kicker">Lesson 01</div>
+    <h2>學習目標</h2>
+    <p class="muted">完成本堂課後，學員將能夠：</p>
+    <ul>
+      <li>說明大語言模型（LLM）的基本原理與主要產業應用場景</li>
+      <li>描述 AI Agent 的系統架構與四大核心組成</li>
+      <li>體驗 Vibe Coding 的開發方式，並理解其長處與限制</li>
+      <li>認識 OpenClaw 平台的基礎概念</li>
+      <li>識別使用 LLM 所衍生的基本資安風險</li>
+    </ul>
+  </section>
+
+  <!-- 3 LLM intro -->
+  <section class="slide">
+    <div class="kicker">核心概念 1</div>
+    <h2>大語言模型（LLM）是什麼？</h2>
+    <p>大語言模型是一種以<strong>海量文字資料</strong>訓練而成的 AI 系統，能夠理解並生成自然語言。</p>
+    <div class="card" style="margin-top:1rem;">
+      <h3 style="margin-top:0;">一個簡單的比喻</h3>
+      <p style="margin:0;">想像有一位助理，他從小閱讀了幾乎所有的書籍、文章、程式文件與對話紀錄。當你給他一個問題或指令，他會根據所有學過的知識生成一個最合理的回應。這就是 LLM 的運作方式。</p>
+    </div>
+  </section>
+
+  <!-- 4 LLM products -->
+  <section class="slide">
+    <div class="kicker">核心概念 1</div>
+    <h2>常見的 LLM 產品（美中並列）</h2>
+    <p class="small" style="margin-top:-0.4rem;">全球 LLM 產業呈現「美中並進」態勢：美國廠商在通用能力與生態系整合上持續領先，中國廠商則以開源、高性價比與快速迭代急起直追。</p>
+    <div class="cols">
+      <div>
+        <h3 style="margin-top:0;">🇺🇸 美國廠商</h3>
+        <table>
+          <tr><th>產品</th><th>開發商</th><th>特點</th></tr>
+          <tr><td>GPT 系列</td><td>OpenAI</td><td>業界最主流的通用模型，生態系完整</td></tr>
+          <tr><td>Claude 系列</td><td>Anthropic</td><td>強調安全性、長文本與 Agent 工作流</td></tr>
+          <tr><td>Gemini 系列</td><td>Google</td><td>整合 Google 服務生態，超長上下文</td></tr>
+          <tr><td>Llama 系列</td><td>Meta</td><td>開源模型，可在本地部署</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">🇨🇳 中國廠商</h3>
+        <table>
+          <tr><th>產品</th><th>開發商</th><th>特點</th></tr>
+          <tr><td>DeepSeek 系列</td><td>DeepSeek（深度求索）</td><td>推理能力強、成本極低</td></tr>
+          <tr><td>通義千問 Qwen</td><td>阿里巴巴</td><td>多尺寸、全模態開源系列</td></tr>
+          <tr><td>GLM 系列</td><td>智譜 AI</td><td>工具調用佳，重視 Agent 場景</td></tr>
+          <tr><td>文心一言 ERNIE</td><td>百度</td><td>中文語境優化，企業導入廣泛</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="small" style="margin-top:.8rem;">＊ LLM 產業更新極快，實際最新版本請以各廠商官網公告為準；教學重點在理解「產品定位差異」，而非記憶特定版本號。</p>
+  </section>
+
+  <!-- 5 LLM capabilities + applications -->
+  <section class="slide">
+    <div class="kicker">核心概念 1</div>
+    <h2>LLM 的核心能力與產業應用</h2>
+    <div class="cols">
+      <div>
+        <h3 style="margin-top:0;">核心能力</h3>
+        <ul>
+          <li><strong>文字生成</strong>：根據 Prompt 產出文字內容</li>
+          <li><strong>語意理解</strong>：理解語境與隱含意圖</li>
+          <li><strong>指令遵循</strong>：依指令執行特定任務</li>
+          <li><strong>推理與分析</strong>：多步驟邏輯推論</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">產業實際應用</h3>
+        <ul>
+          <li>客服自動回覆：全天候回應</li>
+          <li>文件摘要與分析</li>
+          <li>程式碼自動生成</li>
+          <li>行銷文案量產</li>
+          <li>資料分類與標記</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 Agent intro -->
+  <section class="slide">
+    <div class="kicker">核心概念 2</div>
+    <h2>AI Agent 系統架構</h2>
+    <p>AI Agent 是一種能夠<strong>自主執行複雜任務</strong>的 AI 系統，具有完整的「感知 → 思考 → 規劃 → 行動」迴圈。</p>
+    <div class="card" style="margin-top:1rem;">
+      <h3 style="margin-top:0;">直覺的比喻</h3>
+      <p style="margin:0;">你告訴助理：「幫我調查三個競爭對手的定價，整理成 Excel 報表後寄給我。」助理會<strong>自行規劃步驟</strong>：搜尋網路 → 瀏覽官網 → 紀錄資料 → 開啟 Excel → 填寫資料 → 寄送郵件，全程不需要你一步一步指示。</p>
+    </div>
+  </section>
+
+  <!-- 7 Agent 4 components -->
+  <section class="slide">
+    <div class="kicker">核心概念 2</div>
+    <h2>Agent 的四大組成要素</h2>
+    <div class="flow">
+      <div class="box">使用者任務指令</div>
+      <div class="arrow">↓</div>
+      <div class="box">大腦（LLM）<small>理解任務、制定決策</small></div>
+      <div class="arrow">↓</div>
+      <div class="box">規劃器（Planner）<small>將複雜任務拆解為可執行步驟</small></div>
+      <div class="arrow">↓</div>
+      <div class="box">工具集（Tools）<small>瀏覽器、程式執行器、API、檔案讀寫…</small></div>
+      <div class="arrow">↓</div>
+      <div class="box">記憶體（Memory）<small>儲存過去的對話與執行紀錄</small></div>
+    </div>
+  </section>
+
+  <!-- 8 Vibe Coding intro -->
+  <section class="slide">
+    <div class="kicker">核心概念 3</div>
+    <h2>什麼是 Vibe Coding？</h2>
+    <p><strong>Vibe Coding</strong> 是一種以<strong>自然語言驅動</strong>程式碼生成的開發方式。你不需要自己寫每一行程式語法，只需要用白話文描述你想要做的事，由 AI 工具（如 GitHub Copilot）幫你生成可執行的程式碼。</p>
+  </section>
+
+  <!-- 9 Vibe Coding pros/cons -->
+  <section class="slide">
+    <div class="kicker">核心概念 3</div>
+    <h2>Vibe Coding 的長處與限制</h2>
+    <div class="cols">
+      <div class="card">
+        <span class="tag good">長處</span>
+        <ul>
+          <li>大幅降低程式設計的學習門檻</li>
+          <li>快速將想法轉化為可執行工具</li>
+          <li>讓非技術業務人員也能構建流程</li>
+          <li>加快原型（Prototype）開發速度</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag bad">限制</span>
+        <ul>
+          <li>AI 生成的程式碼可能有錯，<strong>必須人工驗證</strong></li>
+          <li>對高安全需求系統有侷限</li>
+          <li>需求描述不清，結果可能不符期望</li>
+          <li>不適合直接用於高精確度核心系統</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 comparison table -->
+  <section class="slide">
+    <div class="kicker">核心概念 3</div>
+    <h2>傳統開發 vs. Vibe Coding</h2>
+    <table>
+      <tr><th></th><th>傳統開發</th><th>Vibe Coding</th></tr>
+      <tr><td>前置要求</td><td>熟悉程式語法與演算法</td><td>能清楚描述需求</td></tr>
+      <tr><td>開發速度</td><td>依工程師熟練度而定</td><td>快速產出原型</td></tr>
+      <tr><td>結果可靠性</td><td>工程師掌控</td><td>需人工驗證</td></tr>
+      <tr><td>適合場景</td><td>核心系統、高安全性</td><td>自動化工具、快速驗證</td></tr>
+    </table>
+  </section>
+
+  <!-- 11 OpenClaw -->
+  <section class="slide">
+    <div class="kicker">核心概念 4</div>
+    <h2>OpenClaw 平台簡介</h2>
+    <p><strong>OpenClaw</strong> 是目前產業廣泛採用的 AI Agent 視覺化開發平台，讓使用者以<strong>拖拉積木</strong>的方式組合 AI 工作流程，大幅降低 Agent 系統的開發難度。</p>
+    <ul>
+      <li>直覺的視覺化流程編輯介面</li>
+      <li>支援串接多種 LLM 後端（GPT、Claude、Llama 等）</li>
+      <li>內建豐富的工具節點：網頁搜尋、讀取檔案、呼叫 API、資料庫操作等</li>
+      <li>支援多個 Agent 相互協作完成複雜任務</li>
+    </ul>
+    <p class="muted">本課程後續堂次將實際使用 OpenClaw 構建各種自動化 Agent 系統。</p>
+  </section>
+
+  <!-- 12 security -->
+  <section class="slide">
+    <div class="kicker">核心概念 5</div>
+    <h2>LLM 與 Agent 的資安風險</h2>
+    <table>
+      <tr><th>風險類型</th><th>說明</th><th>防護方向</th></tr>
+      <tr><td><strong>Prompt Injection</strong></td><td>惡意輸入操控 AI 執行非預期行為</td><td>對外部輸入進行驗證與過濾</td></tr>
+      <tr><td><strong>資料洩漏</strong></td><td>Agent 可能不慎將敏感資料傳送外部 LLM</td><td>避免將機密資料送入外部 API</td></tr>
+      <tr><td><strong>過度授權</strong></td><td>Agent 被賦予超出任務所需的權限</td><td>遵循「最小權限原則」</td></tr>
+      <tr><td><strong>幻覺 Hallucination</strong></td><td>LLM 生成看似合理但錯誤的資訊</td><td>重要輸出需人工核實</td></tr>
+    </table>
+    <div class="footer-quote">
+      重要觀念：LLM 有時會「自信地給出錯誤答案」。在 Agent 系統中，錯誤決策會直接驅動工具執行行動——務必在關鍵決策點加入人工確認機制。
+    </div>
+  </section>
+
+  <!-- 13 demo1 -->
+  <section class="slide">
+    <div class="kicker">課堂示範 1</div>
+    <h2>安裝開發環境</h2>
+    <div class="grid2">
+      <div class="step"><span class="num">1</span><strong>安裝 Python</strong><p class="small">python.org/downloads，安裝時勾選「Add Python to PATH」</p></div>
+      <div class="step"><span class="num">2</span><strong>安裝 VS Code</strong><p class="small">code.visualstudio.com 下載安裝後開啟</p></div>
+      <div class="step"><span class="num">3</span><strong>安裝 GitHub Copilot</strong><p class="small">擴充套件搜尋 GitHub Copilot，安裝並用 GitHub 帳號登入授權</p></div>
+      <div class="step"><span class="num">4</span><strong>測試 Copilot</strong><p class="small">開啟 Chat 視窗，輸入「你好，請用中文自我介紹」測試</p></div>
+    </div>
+  </section>
+
+  <!-- 14 demo2 -->
+  <section class="slide">
+    <div class="kicker">課堂示範 2</div>
+    <h2>用 Vibe Coding 生成第一個 AI 程式</h2>
+    <p>在 Copilot Chat 輸入需求：</p>
+    <pre>請幫我用 Python 寫一個程式，讓我在終端機輸入文字，
+程式會呼叫 OpenAI 的 API，並把 AI 的回應顯示在螢幕上。
+需要支援連續對話，輸入 "exit" 就結束程式。
+請記得從環境變數讀取 API Key，不要把 Key 寫在程式碼裡。</pre>
+    <p class="small">觀察重點：API Key 的讀取方式、對話歷史的儲存方式、請求與回應的流程。接著加入「讀取/寫入檔案」工具——當 AI 有了「工具」，它就從聊天機器人升級為可以做事的代理人。</p>
+  </section>
+
+  <!-- 15 code1 -->
+  <section class="slide">
+    <div class="kicker">程式碼範例（虛擬碼）</div>
+    <h2>基礎 LLM 對話程式</h2>
+    <pre>載入 openai 套件
+設定 API_KEY = 從環境變數讀取("OPENAI_API_KEY")
+
+對話歷史 = []
+
+重複執行:
+    讀取 使用者輸入
+    如果 使用者輸入 == "exit":
+        顯示 "再見！"
+        結束程式
+
+    將「使用者訊息」加入對話歷史
+    呼叫 LLM API:
+        傳入: [模型名稱, 對話歷史]
+        接收: AI 回應文字
+
+    將「AI 回應」加入對話歷史
+    顯示 AI 回應</pre>
+  </section>
+
+  <!-- 16 code2 -->
+  <section class="slide">
+    <div class="kicker">程式碼範例（虛擬碼）</div>
+    <h2>加入工具調用的基礎 Agent 機制</h2>
+    <pre>工具A: 讀取檔案(檔案路徑) → 回傳檔案內文字
+工具B: 寫入檔案(檔案路徑, 文字內容) → 儲存到檔案
+工具清單 = [工具A, 工具B]
+
+函式 Agent執行(任務描述):
+    重複執行 直到任務完成:
+        給 LLM 的輸入 = {
+            系統指令: "你是一個能操作檔案的 AI 助理",
+            任務: 任務描述,
+            可用工具: 工具清單的名稱與說明,
+            過去執行結果: 執行歷史
+        }
+        LLM 決策 = 呼叫 LLM(給 LLM 的輸入)
+
+        如果 LLM 決定使用某個工具:
+            執行該工具，取得結果
+            將結果記錄到執行歷史
+        否則（LLM 認為任務完成）:
+            回傳最終答案</pre>
+  </section>
+
+  <!-- 17 exercises -->
+  <section class="slide">
+    <div class="kicker">課堂思考練習</div>
+    <h2>練習 1・2</h2>
+    <div class="cols">
+      <div class="card">
+        <h3 style="margin-top:0;">找出 AI 可以幫你的事</h3>
+        <p class="small">列出工作或生活中 <strong>3 件</strong>可讓 AI 幫忙的事，並記錄目前花費時間與 AI 能省下什麼。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;">AI 適用性判斷</h3>
+        <p class="small">判斷以下情境是否適合 AI 自動完成並說明理由：撰寫感謝信 / 財務精確計算 / 整理 200 份問卷主題 / 確認合約責任條款。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 homework -->
+  <section class="slide">
+    <div class="kicker">課後作業</div>
+    <h2>下堂課之前請完成</h2>
+    <ul>
+      <li><strong>安裝開發環境</strong>：確保 VS Code 與 GitHub Copilot 正常運作</li>
+      <li><strong>AI 任務實驗</strong>：選一件日常工作小任務，用 ChatGPT 或 Claude 完成</li>
+      <li><strong>記錄觀察</strong>，下堂課分享（2-3 分鐘）：想完成什麼任務？如何描述需求（Prompt）？AI 給出什麼回應？是否符合期望？</li>
+    </ul>
+  </section>
+
+  <!-- 19 further reading -->
+  <section class="slide">
+    <div class="kicker">延伸閱讀</div>
+    <h2>延伸資源</h2>
+    <div class="grid3">
+      <div class="card">
+        <h3 style="margin-top:0;">AI 基礎概念</h3>
+        <ul>
+          <li>OpenAI 官方文件</li>
+          <li>GitHub Copilot 入門指南</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;">AI Agent 深入了解</h3>
+        <ul>
+          <li>LangChain 官方文件</li>
+          <li>《Building LLM-Powered Applications》</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;">資訊安全</h3>
+        <ul>
+          <li>OWASP LLM Top 10</li>
+          <li>NIST AI 風險管理框架</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 thanks -->
+  <section class="slide">
+    <div class="title-wrap">
+      <div class="badge">第01堂 完</div>
+      <h1>Q & A</h1>
+      <p class="lead">下堂課：7/28｜AI Agent 邏輯建構與自動化引擎配置</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+  const total = slides.length;
+  const progress = document.getElementById('progress');
+  const pageno = document.getElementById('pageno');
+
+  function render(){
+    slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+    progress.style.width = ((idx+1)/total*100) + '%';
+    pageno.textContent = (idx+1) + ' / ' + total;
+  }
+  function go(delta){
+    idx = Math.min(total-1, Math.max(0, idx+delta));
+    render();
+  }
+  document.getElementById('prevBtn').addEventListener('click', ()=>go(-1));
+  document.getElementById('nextBtn').addEventListener('click', ()=>go(1));
+  window.addEventListener('keydown', (e)=>{
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){ e.preventDefault(); go(1); }
+    if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault(); go(-1); }
+    if(e.key==='Home'){ idx=0; render(); }
+    if(e.key==='End'){ idx=total-1; render(); }
+  });
+  let touchX=null;
+  window.addEventListener('touchstart', e=> touchX = e.touches[0].clientX);
+  window.addEventListener('touchend', e=>{
+    if(touchX===null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(dx>50) go(-1); else if(dx<-50) go(1);
+    touchX=null;
+  });
+  render();
+</script>
+
+</body>
+</html>
