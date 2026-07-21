@@ -246,7 +246,7 @@
   <section class="slide">
     <div class="kicker">核心概念 3</div>
     <h2>什麼是 Vibe Coding？</h2>
-    <p><strong>Vibe Coding</strong> 是一種以<strong>自然語言驅動</strong>程式碼生成的開發方式。你不需要自己寫每一行程式語法，只需要用白話文描述你想要做的事，由 AI 工具（如 GitHub Copilot）幫你生成可執行的程式碼。</p>
+    <p><strong>Vibe Coding</strong> 是一種以<strong>自然語言驅動</strong>程式碼生成的開發方式。你不需要自己寫每一行程式語法，只需要用白話文描述你想要做的事，由 AI 工具（如 OpenCode）幫你生成可執行的程式碼。</p>
   </section>
 
   <!-- 9 Vibe Coding pros/cons -->
@@ -333,9 +333,9 @@
     <h2>安裝開發環境</h2>
     <div class="grid2">
       <div class="step"><span class="num">1</span><strong>安裝 Python</strong><p class="small">python.org/downloads，安裝時勾選「Add Python to PATH」</p></div>
-      <div class="step"><span class="num">2</span><strong>安裝 VS Code</strong><p class="small">code.visualstudio.com 下載安裝後開啟</p></div>
-      <div class="step"><span class="num">3</span><strong>安裝 GitHub Copilot</strong><p class="small">擴充套件搜尋 GitHub Copilot，安裝並用 GitHub 帳號登入授權</p></div>
-      <div class="step"><span class="num">4</span><strong>測試 Copilot</strong><p class="small">開啟 Chat 視窗，輸入「你好，請用中文自我介紹」測試</p></div>
+      <div class="step"><span class="num">2</span><strong>安裝 OpenCode</strong><p class="small">終端機執行 curl -fsSL https://opencode.ai/install | bash</p></div>
+      <div class="step"><span class="num">3</span><strong>設定 LLM 供應商</strong><p class="small">執行 opencode，輸入 /connect 登入並取得 API Key</p></div>
+      <div class="step"><span class="num">4</span><strong>測試 OpenCode</strong><p class="small">輸入「你好，請用中文自我介紹」，並執行 /init 產生 AGENTS.md</p></div>
     </div>
   </section>
 
@@ -343,7 +343,7 @@
   <section class="slide">
     <div class="kicker">課堂示範 2</div>
     <h2>用 Vibe Coding 生成第一個 AI 程式</h2>
-    <p>在 Copilot Chat 輸入需求：</p>
+    <p>在 OpenCode 對話框輸入需求：</p>
     <pre>請幫我用 Python 寫一個程式，讓我在終端機輸入文字，
 程式會呼叫 OpenAI 的 API，並把 AI 的回應顯示在螢幕上。
 需要支援連續對話，輸入 "exit" 就結束程式。
@@ -421,7 +421,7 @@
     <div class="kicker">課後作業</div>
     <h2>下堂課之前請完成</h2>
     <ul>
-      <li><strong>安裝開發環境</strong>：確保 VS Code 與 GitHub Copilot 正常運作</li>
+      <li><strong>安裝開發環境</strong>：確保 OpenCode 正常運作</li>
       <li><strong>AI 任務實驗</strong>：選一件日常工作小任務，用 ChatGPT 或 Claude 完成</li>
       <li><strong>記錄觀察</strong>，下堂課分享（2-3 分鐘）：想完成什麼任務？如何描述需求（Prompt）？AI 給出什麼回應？是否符合期望？</li>
     </ul>
@@ -436,7 +436,7 @@
         <h3 style="margin-top:0;">AI 基礎概念</h3>
         <ul>
           <li>OpenAI 官方文件</li>
-          <li>GitHub Copilot 入門指南</li>
+          <li>OpenCode 官方文件</li>
         </ul>
       </div>
       <div class="card">

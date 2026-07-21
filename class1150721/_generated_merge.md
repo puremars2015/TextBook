@@ -159,7 +159,7 @@ AI Agent 就是能夠**自主規劃並執行多步驟任務**的 AI 系統。
 
 #### 3. Vibe Coding
 
-**Vibe Coding** 是一種以**自然語言驅動**程式碼生成的開發方式。你不需要自己寫每一行程式語法，只需要用白話文描述你想要做的事，由 AI 工具（如 GitHub Copilot）幫你生成可執行的程式碼。
+**Vibe Coding** 是一種以**自然語言驅動**程式碼生成的開發方式。你不需要自己寫每一行程式語法，只需要用白話文描述你想要做的事，由 AI 工具（如 OpenCode）幫你生成可執行的程式碼。
 
 **Vibe Coding 的長處：**
 
@@ -241,28 +241,38 @@ Telegram / Discord / ...
 1. 前往 [https://www.python.org/downloads/](https://www.python.org/downloads/) 下載最新版本
 2. 安裝時勾選「Add Python to PATH」選項
 
-**步驟 2：安裝 Visual Studio Code**
-1. 前往 [https://code.visualstudio.com/](https://code.visualstudio.com/) 下載安裝
-2. 完成後開啟 VS Code
+**步驟 2：安裝 OpenCode**
 
-**步驟 3：安裝 GitHub Copilot**
-1. 在 VS Code 左側擴充套件搜尋欄輸入 `GitHub Copilot`
-2. 點選安裝
-3. 使用 GitHub 帳號登入並完成授權
+OpenCode 是一套開源、以終端機為核心的 AI 程式開發代理，支援 70 種以上 LLM 供應商，也提供 IDE 擴充套件與桌面版可選用。
 
-**步驟 4：測試 Copilot 正常運作**
-1. 點選左側 Copilot 圖示開啟 Chat 視窗
-2. 輸入「你好，請用中文自我介紹」測試回應
+1. 開啟終端機（macOS/Linux 用終端機，Windows 建議使用 WSL），執行安裝腳本：
+   ```
+   curl -fsSL https://opencode.ai/install | bash
+   ```
+   若偏好使用 Node.js，也可以用：
+   ```
+   npm install -g opencode-ai
+   ```
+2. 安裝完成後，在終端機輸入 `opencode` 啟動介面
+
+**步驟 3：設定 LLM 供應商**
+1. 進入專案資料夾後執行 `opencode`
+2. 在介面中輸入 `/connect`，依畫面指示登入並取得 API Key（或選擇其他 LLM 供應商）
+3. 貼上 API Key 完成連線設定
+
+**步驟 4：測試 OpenCode 正常運作**
+1. 在 OpenCode 對話框輸入「你好，請用中文自我介紹」測試回應
+2. 執行 `/init`，讓 OpenCode 分析目前專案並自動產生 `AGENTS.md`（建議將此檔案一併加入版本控制）
 
 ---
 
 #### 示範二：用 Vibe Coding 生成第一個 AI 程式
 
 **步驟 1：建立工作資料夾**
-在桌面建立一個名為 `ai-course` 的資料夾，並用 VS Code 開啟（檔案 → 開啟資料夾）。
+在桌面建立一個名為 `ai-course` 的資料夾，開啟終端機並切換到該資料夾（`cd ai-course`），執行 `opencode` 啟動。
 
-**步驟 2：在 Copilot Chat 輸入需求**
-在 Copilot Chat 視窗輸入以下描述：
+**步驟 2：向 OpenCode 描述需求**
+在 OpenCode 對話框輸入以下描述：
 ```
 請幫我用 Python 寫一個程式，讓我在終端機輸入文字，
 程式會呼叫 OpenAI 的 API，並把 AI 的回應顯示在螢幕上。
@@ -270,9 +280,11 @@ Telegram / Discord / ...
 請記得從環境變數讀取 API Key，不要把 Key 寫在程式碼裡。
 ```
 
+> 小技巧：需求較複雜時，可先按 **Tab** 切換到 *Plan 模式*，讓 OpenCode 先提出實作規劃、你確認無誤後再按 **Tab** 切回 *Build 模式* 請它動手實作；對結果不滿意時可用 `/undo` 復原、`/redo` 重做。
+
 **步驟 3：觀察生成的程式碼結構**
 
-觀察 Copilot 生成的 Python 程式，注意理解以下部分：
+觀察 OpenCode 生成的 Python 程式，注意理解以下部分：
 - **API Key 的讀取方式**：為何不該把 Key 直接寫在程式碼裡？
 - **對話歷史的儲存方式**：為何需要保存每一輪的對話？
 - **請求與回應的流程**：程式如何把你的輸入傳給 AI 並接收回應？
@@ -372,7 +384,7 @@ Telegram / Discord / ...
 
 在下堂課之前，請完成以下任務：
 
-1. **安裝開發環境**：確保 VS Code 與 GitHub Copilot 已正常運作
+1. **安裝開發環境**：確保 OpenCode 已正常運作
 2. **AI 任務實驗**：選一件你日常工作中的小任務，用 ChatGPT 或 Claude 幫你完成
 3. **記錄觀察**，下堂課分享（2-3 分鐘）：
    - 你想完成什麼任務？
@@ -386,7 +398,7 @@ Telegram / Discord / ...
 
 **AI 基礎概念：**
 - OpenAI 官方文件 — [https://platform.openai.com/docs](https://platform.openai.com/docs)
-- GitHub Copilot 入門指南 — [https://docs.github.com/en/copilot](https://docs.github.com/en/copilot)
+- OpenCode 官方文件 — [https://opencode.ai/docs](https://opencode.ai/docs)（終端機 AI 程式開發代理入門）
 
 **AI Agent 深入了解：**
 - LangChain 官方文件 — [https://docs.langchain.com](https://docs.langchain.com)（主流 Agent 開發框架）
