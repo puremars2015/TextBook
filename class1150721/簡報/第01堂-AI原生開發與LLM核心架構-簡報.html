@@ -109,6 +109,20 @@
   .navbtn:hover{background:rgba(255,255,255,.12);}
   #prevBtn{left:1.4rem;} #nextBtn{right:1.4rem;}
   .small{font-size:.95rem; color:var(--muted);}
+  .hermes-layout{display:grid; grid-template-columns:.9fr 1.1fr; gap:2rem; align-items:center;}
+  .hermes-flow{margin:0; gap:.2rem;}
+  .hermes-flow .box{padding:.55rem 1.2rem; min-width:240px;}
+  .hermes-flow .arrow{font-size:1.1rem; line-height:1;}
+  .hermes-copy p{margin:.1rem 0 .8rem; line-height:1.55;}
+  .hermes-copy ul{margin:.4rem 0; font-size:1.02rem; line-height:1.55; padding-left:1.35rem;}
+  .hermes-copy li{margin-bottom:.28rem;}
+  .hermes-note{margin:.75rem 0 0; font-size:1rem; line-height:1.45;}
+  @media (max-height:700px){
+    .hermes-layout{gap:1.2rem;}
+    .hermes-flow .box{padding:.42rem 1rem;}
+    .hermes-copy p,.hermes-copy ul{font-size:.94rem;}
+    .hermes-note{font-size:.9rem;}
+  }
 </style>
 </head>
 <body>
@@ -292,23 +306,27 @@
   <section class="slide">
     <div class="kicker">核心概念 4</div>
     <h2>Hermes 平台簡介</h2>
-    <p><strong>Hermes Agent</strong> 是一套開源的 AI Agent 閘道器，透過 Docker 或原生安裝部署，將 LLM 與訊息平台（Telegram、Discord）及各式工具串接起來，讓使用者像聊天一樣操作 Agent。</p>
-    <div class="flow" style="margin:1rem 0;">
-      <div class="box">Telegram / Discord</div>
-      <div class="arrow">↓</div>
-      <div class="box">Hermes Gateway<small>閘道器</small></div>
-      <div class="arrow">↓</div>
-      <div class="box">Agent（大腦）<small>你在對話的 AI</small></div>
-      <div class="arrow">↓</div>
-      <div class="box">Tools（手）<small>瀏覽器、終端機、檔案、搜尋、排程…</small></div>
+    <div class="hermes-layout">
+      <div class="flow hermes-flow">
+        <div class="box">Telegram / Discord</div>
+        <div class="arrow">↓</div>
+        <div class="box">Hermes Gateway<small>閘道器</small></div>
+        <div class="arrow">↓</div>
+        <div class="box">Agent（大腦）<small>你在對話的 AI</small></div>
+        <div class="arrow">↓</div>
+        <div class="box">Tools（手）<small>瀏覽器、終端機、檔案、搜尋、排程…</small></div>
+      </div>
+      <div class="hermes-copy">
+        <p><strong>Hermes Agent</strong> 是一套開源的 AI Agent 閘道器，透過 Docker 或原生安裝部署，將 LLM 與訊息平台（Telegram、Discord）及各式工具串接起來，讓使用者像聊天一樣操作 Agent。</p>
+        <ul>
+          <li>開源、可自架部署，資料掌握在自己手上</li>
+          <li>透過 Gateway 串接多種訊息平台，用聊天介面操作 Agent</li>
+          <li>內建瀏覽器操作、網頁搜尋、Cron Job 定時監控等工具</li>
+          <li>支援條件觸發推播，避免資訊轟炸；提供 Control UI 視覺化管理</li>
+        </ul>
+      </div>
     </div>
-    <ul>
-      <li>開源、可自架部署，資料掌握在自己手上</li>
-      <li>透過 Gateway 串接多種訊息平台，用聊天介面操作 Agent</li>
-      <li>內建瀏覽器操作、網頁搜尋、Cron Job 定時監控等工具</li>
-      <li>支援條件觸發推播，避免資訊轟炸；提供 Control UI 視覺化管理</li>
-    </ul>
-    <p class="muted">本課程後續堂次將實際使用 Hermes Agent 構建各種自動化查詢與監控系統。</p>
+    <p class="muted hermes-note">本課程後續堂次將實際使用 Hermes Agent 構建各種自動化查詢與監控系統。</p>
   </section>
 
   <!-- 12 security -->
