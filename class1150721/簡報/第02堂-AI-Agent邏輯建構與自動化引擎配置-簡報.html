@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第02堂｜AI Agent 邏輯建構與自動化引擎配置</title>
+<style>
+  :root {
+    --ink: #17313a;
+    --deep: #0f4c5c;
+    --teal: #2aa198;
+    --mint: #d9f4ed;
+    --coral: #f47769;
+    --yellow: #f4c95d;
+    --sky: #d7eff7;
+    --paper: #f8fcfa;
+    --white: #ffffff;
+    --muted: #5d747b;
+    --line: #c7e1db;
+    --danger: #cf4a4a;
+    --shadow: 0 16px 36px rgba(22, 72, 78, .12);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%; margin: 0; overflow: hidden;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background-color: var(--paper);
+    background-image: linear-gradient(rgba(42, 161, 152, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(42, 161, 152, .055) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--ink);
+  }
+
+  button { font: inherit; }
+  .deck { position: relative; width: 100vw; height: 100vh; }
+  .slide {
+    position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center;
+    padding: 6.5vh 9vw 7vh; opacity: 0; transform: translateY(18px);
+    transition: opacity .32s ease, transform .32s ease;
+  }
+  .slide.active { display: flex; opacity: 1; transform: translateY(0); }
+  .slide::before {
+    content: ""; position: absolute; width: 28vw; height: 28vw; max-width: 360px; max-height: 360px;
+    right: -11vw; top: -15vw; border: 38px solid rgba(42, 161, 152, .10); border-radius: 50%; pointer-events: none;
+  }
+  .slide > * { position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem; width: fit-content; margin: 0 0 .65rem;
+    color: var(--deep); font-size: .86rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase;
+  }
+  .eyebrow::before { content: ""; width: 10px; height: 10px; background: var(--coral); transform: rotate(45deg); }
+  h1, h2, h3, p { margin-top: 0; }
+  h1 { margin-bottom: .55rem; font-size: clamp(2.4rem, 5vw, 4.5rem); line-height: 1.18; letter-spacing: 0; }
+  h2 { margin-bottom: 1.35rem; color: var(--deep); font-size: clamp(2rem, 3.3vw, 3.15rem); line-height: 1.25; letter-spacing: 0; }
+  h3 { margin-bottom: .45rem; color: var(--deep); font-size: 1.25rem; line-height: 1.35; }
+  p { font-size: 1.12rem; line-height: 1.7; }
+  strong { color: var(--deep); }
+  .lead { max-width: 740px; color: var(--muted); font-size: clamp(1.15rem, 2vw, 1.55rem); }
+  .muted, .small { color: var(--muted); }
+  .small { font-size: .92rem; line-height: 1.55; }
+  .title-slide { align-items: center; text-align: center; }
+  .title-slide::after {
+    content: ""; width: min(68vw, 900px); height: 10px; margin-top: 1.5rem;
+    background: repeating-linear-gradient(90deg, var(--teal) 0 44px, transparent 44px 62px, var(--coral) 62px 88px, transparent 88px 106px, var(--yellow) 106px 132px, transparent 132px 150px);
+  }
+  .course-chip {
+    display: inline-block; margin-bottom: 1.5rem; padding: .52rem 1.05rem; border: 1px solid var(--teal);
+    background: var(--white); color: var(--deep); font-size: .9rem; font-weight: 800; letter-spacing: .06em;
+    box-shadow: 5px 5px 0 var(--mint);
+  }
+
+  .grid2, .grid3, .cols { display: grid; gap: 1.25rem; align-items: stretch; }
+  .grid2, .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card, .step, .stat, .flow-box {
+    border: 1px solid var(--line); background: rgba(255, 255, 255, .94); box-shadow: var(--shadow);
+  }
+  .card { padding: 1.35rem 1.45rem; border-radius: 8px; }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+  .accent-coral { border-top: 6px solid var(--coral); }
+  .accent-teal { border-top: 6px solid var(--teal); }
+  .accent-yellow { border-top: 6px solid var(--yellow); }
+  ul { margin: .35rem 0 0; padding-left: 1.25rem; font-size: 1.08rem; line-height: 1.72; }
+  li { margin-bottom: .35rem; }
+  .objective-list { columns: 2; column-gap: 2rem; max-width: 1000px; }
+  .objective-list li { break-inside: avoid; margin-bottom: .8rem; padding-left: .15rem; }
+  .objective-list li::marker { color: var(--coral); font-weight: 800; }
+  .key-phrase { margin-top: .6rem; padding: 1rem 1.25rem; border-left: 6px solid var(--coral); background: rgba(244, 201, 93, .2); font-size: 1.18rem; font-weight: 700; line-height: 1.6; }
+
+  .logic-flow { display: grid; grid-template-columns: 1fr auto 1.5fr auto 1fr; gap: .75rem; align-items: center; max-width: 1080px; }
+  .logic-node { min-height: 130px; padding: 1.1rem; display: flex; flex-direction: column; justify-content: center; border: 2px solid var(--deep); background: var(--white); text-align: center; box-shadow: 7px 7px 0 var(--mint); }
+  .logic-node.central { border-color: var(--coral); background: #fff7f4; }
+  .logic-node span { display: block; margin-bottom: .35rem; color: var(--deep); font-size: 1.25rem; font-weight: 800; }
+  .logic-node small { color: var(--muted); font-size: .9rem; line-height: 1.45; }
+  .arrow { color: var(--coral); font-size: 2rem; font-weight: 800; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--white); box-shadow: var(--shadow); font-size: 1rem; }
+  th, td { padding: .75rem .9rem; border: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.45; }
+  th { background: var(--deep); color: var(--white); font-weight: 800; }
+  tr:nth-child(even) td { background: #f1faf7; }
+  .yes { color: #147567; font-weight: 800; }
+  .no { color: var(--danger); font-weight: 800; }
+
+  .cycle { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6rem; max-width: 1080px; align-items: center; }
+  .cycle-step { min-height: 142px; padding: 1rem; border: 2px solid var(--teal); background: var(--white); text-align: center; }
+  .cycle-step:nth-child(2) { border-color: var(--coral); background: #fff7f4; }
+  .cycle-step:nth-child(3) { border-color: var(--yellow); background: #fffbed; }
+  .cycle-step:nth-child(4) { border-color: var(--deep); background: #eff9fb; }
+  .cycle-step b { display: block; margin-bottom: .5rem; color: var(--deep); font-size: 1.15rem; }
+  .cycle-step small { color: var(--muted); line-height: 1.45; }
+  .cycle-return { grid-column: 1 / -1; padding-top: .55rem; color: var(--coral); font-size: 1.1rem; font-weight: 800; text-align: center; }
+
+  .branching { display: grid; grid-template-columns: .85fr 1.5fr .85fr; gap: 1.2rem; align-items: center; max-width: 1100px; }
+  .branch-root { padding: 1.35rem; border: 2px solid var(--deep); background: var(--sky); font-weight: 800; text-align: center; }
+  .branch-question { padding: 1.5rem; border: 3px solid var(--coral); background: #fff7f4; text-align: center; font-size: 1.35rem; font-weight: 800; }
+  .branch-outcomes { display: grid; gap: .75rem; }
+  .branch-outcome { padding: .85rem 1rem; border-left: 7px solid var(--teal); background: var(--white); box-shadow: 5px 5px 0 var(--mint); font-weight: 700; }
+  .branch-outcome.alt { border-color: var(--yellow); }
+  .branch-outcome.warn { border-color: var(--coral); }
+
+  .retry-row { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: .8rem; align-items: center; max-width: 1080px; }
+  .retry-item { min-height: 125px; padding: 1.05rem 1.2rem; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
+  .retry-item b { display: block; margin-bottom: .35rem; color: var(--deep); }
+  .retry-item small { color: var(--muted); line-height: 1.5; }
+
+  pre { margin: 0; padding: 1.15rem 1.35rem; overflow: auto; border: 1px solid #a9d7d0; border-radius: 6px; background: #123f49; color: #ebfff8; font-family: "Cascadia Code", Consolas, monospace; font-size: .95rem; line-height: 1.58; white-space: pre-wrap; }
+  .code-note { margin-top: .75rem; padding: .7rem .95rem; border-left: 5px solid var(--yellow); background: #fffbed; color: #5b4a1b; font-size: .95rem; }
+  .tool-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .85rem; }
+  .tool { min-height: 146px; padding: 1rem; border: 1px solid var(--line); background: var(--white); box-shadow: 5px 5px 0 rgba(42, 161, 152, .13); }
+  .tool b { display: block; margin-bottom: .35rem; color: var(--deep); }
+  .tool small { color: var(--muted); line-height: 1.45; }
+  .number { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin-bottom: .55rem; background: var(--coral); color: var(--white); font-weight: 800; }
+  .exercise-table td { height: 48px; }
+
+  .progress { position: fixed; top: 0; left: 0; z-index: 20; height: 7px; background: var(--coral); transition: width .28s ease; }
+  .pageno, .navhint { position: fixed; z-index: 20; bottom: 1.55rem; color: var(--muted); font-size: .9rem; font-weight: 700; letter-spacing: .04em; }
+  .pageno { right: 2.2rem; }
+  .navhint { left: 2.2rem; }
+  .navbtn { position: fixed; top: 50%; z-index: 20; display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.9); color: var(--deep); box-shadow: 0 8px 20px rgba(20, 82, 85, .14); cursor: pointer; font-size: 1.7rem; line-height: 1; }
+  .navbtn:hover { border-color: var(--teal); background: var(--mint); }
+  #prevBtn { left: 1.4rem; }
+  #nextBtn { right: 1.4rem; }
+
+  @media (max-width: 850px) {
+    .slide { padding: 6vh 10vw 10vh; overflow-y: auto; justify-content: flex-start; }
+    .grid2, .grid3, .cols, .logic-flow, .branching, .retry-row { grid-template-columns: 1fr; }
+    .cycle, .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cycle-return { grid-column: 1 / -1; }
+    .arrow { transform: rotate(90deg); text-align: center; }
+    .objective-list { columns: 1; }
+    .navhint { display: none; }
+    .navbtn { top: auto; bottom: 1.1rem; transform: none; }
+    #prevBtn { left: 1.25rem; }
+    #nextBtn { right: 4.8rem; }
+    .pageno { bottom: 2.15rem; right: 1.35rem; }
+  }
+  @media (max-height: 720px) and (min-width: 851px) {
+    .slide { padding-top: 5vh; padding-bottom: 5vh; }
+    h2 { margin-bottom: .8rem; }
+    .card { padding: 1rem 1.2rem; }
+    ul, p { font-size: 1rem; line-height: 1.55; }
+    .cycle-step { min-height: 115px; padding: .75rem; }
+    .tool { min-height: 115px; padding: .75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="pageno" id="pageno"></div>
+<div class="navhint">使用方向鍵、空白鍵或按鈕翻頁</div>
+<button class="navbtn" id="prevBtn" type="button" aria-label="上一頁">&#8249;</button>
+<button class="navbtn" id="nextBtn" type="button" aria-label="下一頁">&#8250;</button>
+
+<main class="deck" id="deck">
+  <section class="slide title-slide active">
+    <div class="course-chip">2026 秋季班 | 7/28 第02堂</div>
+    <h1>AI Agent 邏輯建構<br>與自動化引擎配置</h1>
+    <p class="lead">從流程控制到工具調用，讓 AI 不只會回答，也能可靠地完成任務。</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">Lesson 02</div>
+    <h2>本堂學習目標</h2>
+    <p class="muted">完成本堂課後，學員將能夠：</p>
+    <ol class="objective-list">
+      <li>理解 AI Agent 流程自動化工具的核心架構與底層邏輯</li>
+      <li>掌握條件判斷與迴圈兩個基本控制元素</li>
+      <li>為自動化流程加入錯誤偵測與容錯補償機制</li>
+      <li>使用 GitHub Copilot 撰寫能與 LLM 對話的 Python 程式</li>
+      <li>讓 Agent 具備工具調用能力，理解其與一般聊天的差異</li>
+    </ol>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 1</div>
+    <h2>自動化引擎：任務如何變成行動？</h2>
+    <p>不論是人工 SOP 或 AI Agent，自動化流程都可拆解成三個核心元素。</p>
+    <div class="logic-flow">
+      <div class="logic-node"><span>輸入 Input</span><small>任務、資料、觸發事件</small></div>
+      <div class="arrow">&rarr;</div>
+      <div class="logic-node central"><span>決策邏輯</span><small>條件判斷、規劃、選擇下一步</small></div>
+      <div class="arrow">&rarr;</div>
+      <div class="logic-node"><span>輸出 Output</span><small>結果、通知、寫檔、寄信</small></div>
+    </div>
+    <div class="key-phrase">AI Agent 的特別之處：決策邏輯可由 LLM 動態產生，不必將每條規則完全寫死。</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 1</div>
+    <h2>Agent 的完整工作週期</h2>
+    <div class="cycle">
+      <div class="cycle-step"><b>1. 接收任務</b><small>使用者或系統給出指令</small></div>
+      <div class="cycle-step"><b>2. 拆解步驟</b><small>判斷目標，規劃可執行動作</small></div>
+      <div class="cycle-step"><b>3. 執行行動</b><small>呼叫工具，完成子任務</small></div>
+      <div class="cycle-step"><b>4. 確認結果</b><small>判斷成功、失敗或需要資訊</small></div>
+      <div class="cycle-step"><b>5. 回報完成</b><small>整理結果並交還給使用者</small></div>
+      <div class="cycle-return">若未完成或發生錯誤，帶著新的觀察回到「拆解步驟」，再決定下一個行動。</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 2</div>
+    <h2>條件判斷：讓流程會選路</h2>
+    <p>條件判斷的本質是：<strong>如果滿足條件，就採取對應動作；否則選擇另一條路。</strong></p>
+    <div class="branching">
+      <div class="branch-root">收到一封新郵件<br><small>主旨 + 內文</small></div>
+      <div class="branch-question">郵件意圖是什麼？</div>
+      <div class="branch-outcomes">
+        <div class="branch-outcome">含「請款」或付款語意<br>轉交財務處理</div>
+        <div class="branch-outcome alt">含抱怨、退款或不滿<br>標示高優先，轉客服主管</div>
+        <div class="branch-outcome warn">其他一般問題<br>生成標準回覆草稿</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 2</div>
+    <h2>條件判斷的程式思維</h2>
+    <div class="cols">
+      <div>
+        <pre>如果 條件A 為真:
+    執行動作A
+否則如果 條件B 為真:
+    執行動作B
+否則:
+    執行預設動作</pre>
+      </div>
+      <div class="card accent-coral">
+        <h3>在 Agent 中的應用</h3>
+        <ul>
+          <li>若 LLM 決定「呼叫工具」：執行指定工具</li>
+          <li>若 LLM 判斷「任務完成」：回傳最終答案</li>
+          <li>若資訊不足：向使用者提出澄清問題</li>
+          <li>若工具失敗：重試、改用替代方案或轉人工</li>
+        </ul>
+      </div>
+    </div>
+    <p class="code-note">設計提醒：條件必須可觀察、可判斷。模糊的條件，會讓自動化流程走向不可預期。</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 2</div>
+    <h2>迴圈：讓 Agent 持續推進任務</h2>
+    <div class="grid2">
+      <article class="card accent-teal">
+        <h3>計數迴圈</h3>
+        <p>重複固定次數，或逐筆處理一份明確清單。</p>
+        <div class="key-phrase">範例：逐一處理資料夾中的 100 份報表。</div>
+      </article>
+      <article class="card accent-yellow">
+        <h3>條件迴圈</h3>
+        <p>持續執行，直到任務完成或符合停止條件。</p>
+        <div class="key-phrase">範例：反覆呼叫 API，直到取得有效回應。</div>
+      </article>
+    </div>
+    <p class="small" style="margin-top:1rem;">Agent 最常使用條件迴圈：思考 &rarr; 行動 &rarr; 觀察結果 &rarr; 再思考。</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 2</div>
+    <h2>迴圈要有「安全出口」</h2>
+    <div class="grid2">
+      <div>
+        <pre>重複執行 直到 任務完成:
+    思考當前狀態
+    決定下一個行動
+    執行行動
+    觀察結果
+    更新對任務的理解</pre>
+      </div>
+      <div class="card accent-coral">
+        <h3>避免無限迴圈</h3>
+        <ul>
+          <li>設定明確的任務完成條件</li>
+          <li>設定最大步驟數或最大重試次數</li>
+          <li>記錄每次嘗試的結果，避免重複做同一件事</li>
+          <li>達到上限時，交由人工決定下一步</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 3</div>
+    <h2>錯誤不是例外，是流程的一部分</h2>
+    <p>網路中斷、API 逾時、資料格式不符都會發生。好的自動化系統需要先設想失敗，再設計回應。</p>
+    <table>
+      <tr><th>步驟</th><th>要回答的問題</th><th>例子</th></tr>
+      <tr><td><strong>偵測</strong></td><td>哪裡出錯？</td><td>API 回應逾時、檔案不存在</td></tr>
+      <tr><td><strong>分類</strong></td><td>能不能重試？</td><td>暫時斷線可以重試；權限不足不應重試</td></tr>
+      <tr><td><strong>補償</strong></td><td>下一步怎麼做？</td><td>等待後重試、切換備用模型、通知人工</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 3</div>
+    <h2>容錯策略：為流程預備 Plan B</h2>
+    <div class="grid2">
+      <article class="card accent-teal"><h3>重試 Retry</h3><p>適合網路暫時不穩、API 偶發逾時。設定次數上限，不要無止盡重試。</p></article>
+      <article class="card accent-yellow"><h3>漸進等待 Backoff</h3><p>每次重試等待更久，避免在 API 限流時持續施壓。</p></article>
+      <article class="card accent-coral"><h3>替代方案 Fallback</h3><p>主要服務故障時改用備援資料來源、備用模型或暫存資料。</p></article>
+      <article class="card accent-teal"><h3>人工介入</h3><p>遇到高風險或無法修復的錯誤，要通知能做決策的人。</p></article>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 3</div>
+    <h2>一次可靠的重試流程</h2>
+    <div class="retry-row">
+      <div class="retry-item"><b>呼叫 API</b><small>送出任務，設定逾時時間。</small></div>
+      <div class="arrow">&rarr;</div>
+      <div class="retry-item"><b>成功？</b><small>成功就使用結果；失敗則記錄錯誤類型。</small></div>
+      <div class="arrow">&rarr;</div>
+      <div class="retry-item"><b>可重試？</b><small>是：等待後再試；否：切換方案或請人工處理。</small></div>
+    </div>
+    <pre style="margin-top:1.25rem; max-width:1080px;">對 嘗試次數 從 1 到 最大重試次數:
+    嘗試呼叫 API
+    如果成功: 回傳結果
+    如果是暫時性錯誤: 等待後重試
+    如果是不可恢復錯誤: 記錄原因並停止
+
+回傳「已達重試上限，請人工檢查」</pre>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 4</div>
+    <h2>工具調用：讓 Agent 從會說變成會做</h2>
+    <p>工具是一個具有<strong>明確輸入與輸出</strong>的函式。LLM 負責決定何時使用哪個工具，程式負責真正執行。</p>
+    <div class="tool-grid">
+      <div class="tool"><b>搜尋工具</b><small>搜尋網路或資料庫<br>例：查詢競品資訊</small></div>
+      <div class="tool"><b>檔案工具</b><small>讀取與寫入檔案<br>例：處理 CSV、TXT</small></div>
+      <div class="tool"><b>計算工具</b><small>執行精確運算<br>例：計算機、Python</small></div>
+      <div class="tool"><b>通訊工具</b><small>發送郵件與訊息<br>例：Outlook、LINE</small></div>
+      <div class="tool"><b>瀏覽器工具</b><small>開啟網頁並操作<br>例：Playwright</small></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 4</div>
+    <h2>工具調用的完整閉環</h2>
+    <div class="cycle">
+      <div class="cycle-step"><b>使用者任務</b><small>「找出本週三家競品的價格」</small></div>
+      <div class="cycle-step"><b>LLM 分析</b><small>判斷需要搜尋與整理資訊</small></div>
+      <div class="cycle-step"><b>呼叫工具</b><small>傳入關鍵字與網址等參數</small></div>
+      <div class="cycle-step"><b>取得結果</b><small>工具回傳資料或錯誤訊息</small></div>
+      <div class="cycle-step"><b>LLM 再決策</b><small>繼續調查，或整理為最終答案</small></div>
+      <div class="cycle-return">LLM 不直接碰觸電腦或資料庫；工具執行層必須負責權限控管、驗證與記錄。</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作一</div>
+    <h2>用 Copilot 建立 LLM 對話程式</h2>
+    <div class="grid2">
+      <article class="card accent-teal"><div class="number">1</div><h3>建立環境</h3><p>安裝 <strong>openai</strong> 套件，並確認 Python 環境可正常執行。</p></article>
+      <article class="card accent-yellow"><div class="number">2</div><h3>設定憑證</h3><p>從環境變數讀取 <strong>OPENAI_API_KEY</strong>，不要將金鑰寫入程式碼。</p></article>
+      <article class="card accent-coral"><div class="number">3</div><h3>描述需求</h3><p>請 Copilot 寫出支援連續對話、保留歷史與錯誤處理的程式。</p></article>
+      <article class="card accent-teal"><div class="number">4</div><h3>檢視與測試</h3><p>理解 <strong>messages</strong>、<strong>try / except</strong> 和 <strong>os.environ</strong> 的用途。</p></article>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作一</div>
+    <h2>請 Copilot 協助實作的 Prompt</h2>
+    <pre>請幫我用 Python 寫一個與 OpenAI GPT 對話的程式：
+1. 從環境變數讀取 API Key，不要寫死在程式裡
+2. 支援連續對話，必須保存對話歷史
+3. 使用者輸入 "exit" 就結束程式
+4. 程式需要基本錯誤處理，例如 API 連線失敗時顯示友善訊息
+5. 對暫時性錯誤最多重試 3 次</pre>
+    <div class="code-note">檢查重點：每輪對話有沒有同時記錄「使用者訊息」與「AI 回應」？金鑰是否只從環境變數讀取？</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作二</div>
+    <h2>加入檔案工具，升級為基礎 Agent</h2>
+    <div class="grid2">
+      <div>
+        <pre>工具A：read_file(path)
+    輸入：檔案路徑
+    輸出：檔案文字或錯誤訊息
+
+工具B：write_file(path, content)
+    輸入：路徑、文字內容
+    輸出：成功或失敗狀態</pre>
+      </div>
+      <div class="card accent-coral">
+        <h3>Agent 執行順序</h3>
+        <ol style="line-height:1.75; padding-left:1.25rem;">
+          <li>LLM 判斷是否需要工具</li>
+          <li>程式檢查工具與參數是否合法</li>
+          <li>執行對應函式，取得結果</li>
+          <li>將結果傳回 LLM，讓它決定下一步</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作二</div>
+    <h2>工具調用的 Agent 虛擬碼</h2>
+    <pre>函式 Agent執行(使用者指令):
+    對話歷史 = [系統提示 + 工具說明 + 使用者指令]
+
+    重複執行 最多 10 次:
+        LLM回應 = 呼叫LLM(對話歷史)
+
+        如果 LLM回應.類型 == "呼叫工具":
+            工具名 = LLM回應.工具名稱
+            參數 = LLM回應.工具參數
+            工具結果 = 工具清單[工具名](參數)
+            將工具結果加入對話歷史
+        否則如果 LLM回應.類型 == "最終回答":
+            回傳 LLM回應.內容
+
+    回傳 "已達最大步驟數，任務未完成"</pre>
+    <p class="code-note">安全觀念：只開放需要的工具與資料夾；所有寫入、刪除或外部傳送操作都應設計確認機制。</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">課堂練習</div>
+    <h2>練習 1：設計自動分類郵件 Agent</h2>
+    <p>請用文字或流程圖設計一個自動分類郵件的 Agent，先把流程說清楚，再思考程式怎麼寫。</p>
+    <table class="exercise-table">
+      <tr><th>設計面向</th><th>你的答案</th></tr>
+      <tr><td>輸入資料</td><td>郵件主旨、內文、寄件者、附件...</td></tr>
+      <tr><td>條件判斷</td><td>哪些語意或資訊要導向不同部門？</td></tr>
+      <tr><td>可能錯誤</td><td>分類不確定、附件讀取失敗、寄件人不明...</td></tr>
+      <tr><td>最終輸出</td><td>標籤、優先級、回覆草稿、轉交通知...</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">課堂練習</div>
+    <h2>練習 2：判斷該用哪一種迴圈</h2>
+    <table>
+      <tr><th>場景</th><th>計數迴圈</th><th>條件迴圈</th><th>思考方向</th></tr>
+      <tr><td>處理資料夾內 50 個 Excel 檔案</td><td></td><td></td><td>清單數量固定且可列出</td></tr>
+      <tr><td>反覆呼叫 API 直到取得有效回應</td><td></td><td></td><td>完成與否取決於回應狀態</td></tr>
+      <tr><td>Agent 持續規劃並執行直到任務完成</td><td></td><td></td><td>每一步會改變下一步決策</td></tr>
+      <tr><td>每天發送報表，連續執行 30 天</td><td></td><td></td><td>需要固定執行次數與排程</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">課後作業</div>
+    <h2>把今天的 Agent 再往前推一步</h2>
+    <div class="grid2">
+      <article class="card accent-teal">
+        <h3>1. 擴充工具</h3>
+        <p>在課堂 Agent 中新增第三個工具：列出指定資料夾內所有檔案。讓 Agent 知道「有哪些資料」可以操作。</p>
+      </article>
+      <article class="card accent-coral">
+        <h3>2. 刻意測試失敗</h3>
+        <p>嘗試讀取不存在的檔案，觀察程式回應；改寫錯誤訊息，讓使用者知道發生什麼事、下一步該做什麼。</p>
+      </article>
+    </div>
+    <div class="key-phrase">下次帶著你的觀察來：你的 Agent 在什麼情況下判斷正確？又在哪裡需要人類接手？</div>
+  </section>
+
+  <section class="slide title-slide">
+    <div class="course-chip">第02堂 完</div>
+    <h1>Q &amp; A</h1>
+    <p class="lead">下一堂：8/04 | 巨量數據調度工程與非結構化資料轉換</p>
+  </section>
+</main>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const progress = document.getElementById('progress');
+  const pageNumber = document.getElementById('pageno');
+  let index = 0;
+  let touchStartX = null;
+
+  function render() {
+    slides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === index));
+    progress.style.width = `${((index + 1) / total) * 100}%`;
+    pageNumber.textContent = `${index + 1} / ${total}`;
+  }
+
+  function go(delta) {
+    index = Math.min(total - 1, Math.max(0, index + delta));
+    render();
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => go(-1));
+  document.getElementById('nextBtn').addEventListener('click', () => go(1));
+  window.addEventListener('keydown', (event) => {
+    if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(event.key)) {
+      event.preventDefault();
+      go(1);
+    }
+    if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) {
+      event.preventDefault();
+      go(-1);
+    }
+    if (event.key === 'Home') { index = 0; render(); }
+    if (event.key === 'End') { index = total - 1; render(); }
+  });
+  window.addEventListener('touchstart', (event) => { touchStartX = event.touches[0].clientX; });
+  window.addEventListener('touchend', (event) => {
+    if (touchStartX === null) return;
+    const distance = event.changedTouches[0].clientX - touchStartX;
+    if (distance > 50) go(-1);
+    if (distance < -50) go(1);
+    touchStartX = null;
+  });
+  render();
+</script>
+</body>
+</html>
