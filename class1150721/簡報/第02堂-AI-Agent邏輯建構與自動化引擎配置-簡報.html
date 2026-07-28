@@ -189,7 +189,7 @@
       <li>理解 AI Agent 流程自動化工具的核心架構與底層邏輯</li>
       <li>掌握條件判斷與迴圈兩個基本控制元素</li>
       <li>為自動化流程加入錯誤偵測與容錯補償機制</li>
-      <li>使用 GitHub Copilot 撰寫能與 LLM 對話的 Python 程式</li>
+      <li>使用 OpenCode 撰寫能與 LLM 對話的 Python 程式</li>
       <li>讓 Agent 具備工具調用能力，理解其與一般聊天的差異</li>
     </ol>
   </section>
@@ -373,18 +373,18 @@
 
   <section class="slide">
     <div class="eyebrow">實作一</div>
-    <h2>用 Copilot 建立 LLM 對話程式</h2>
+    <h2>用 OpenCode 建立 LLM 對話程式</h2>
     <div class="grid2">
       <article class="card accent-teal"><div class="number">1</div><h3>建立環境</h3><p>安裝 <strong>openai</strong> 套件，並確認 Python 環境可正常執行。</p></article>
       <article class="card accent-yellow"><div class="number">2</div><h3>設定憑證</h3><p>從環境變數讀取 <strong>OPENAI_API_KEY</strong>，不要將金鑰寫入程式碼。</p></article>
-      <article class="card accent-coral"><div class="number">3</div><h3>描述需求</h3><p>請 Copilot 寫出支援連續對話、保留歷史與錯誤處理的程式。</p></article>
+      <article class="card accent-coral"><div class="number">3</div><h3>啟動 OpenCode</h3><p>在專案資料夾的終端機輸入 <strong>opencode</strong>，再用自然語言描述需求。</p></article>
       <article class="card accent-teal"><div class="number">4</div><h3>檢視與測試</h3><p>理解 <strong>messages</strong>、<strong>try / except</strong> 和 <strong>os.environ</strong> 的用途。</p></article>
     </div>
   </section>
 
   <section class="slide">
     <div class="eyebrow">實作一</div>
-    <h2>請 Copilot 協助實作的 Prompt</h2>
+    <h2>在 OpenCode 輸入實作需求</h2>
     <pre>請幫我用 Python 寫一個與 OpenAI GPT 對話的程式：
 1. 從環境變數讀取 API Key，不要寫死在程式裡
 2. 支援連續對話，必須保存對話歷史
