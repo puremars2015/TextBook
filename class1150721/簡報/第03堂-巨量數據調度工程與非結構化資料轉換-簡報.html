@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第03堂｜巨量數據調度工程與非結構化資料轉換</title>
+<style>
+  :root {
+    --ink: #17313a;
+    --deep: #0f4c5c;
+    --teal: #2aa198;
+    --mint: #d9f4ed;
+    --coral: #f47769;
+    --yellow: #f4c95d;
+    --sky: #d7eff7;
+    --paper: #f8fcfa;
+    --white: #ffffff;
+    --muted: #5d747b;
+    --line: #c7e1db;
+    --danger: #cf4a4a;
+    --shadow: 0 16px 36px rgba(22, 72, 78, .12);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%; margin: 0; overflow: hidden;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background-color: var(--paper);
+    background-image: linear-gradient(rgba(42, 161, 152, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(42, 161, 152, .055) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--ink);
+  }
+
+  button { font: inherit; }
+  .deck { position: relative; width: 100vw; height: 100vh; }
+  .slide {
+    position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center;
+    padding: 6.5vh 9vw 7vh; opacity: 0; transform: translateY(18px);
+    transition: opacity .32s ease, transform .32s ease;
+  }
+  .slide.active { display: flex; opacity: 1; transform: translateY(0); }
+  .slide::before {
+    content: ""; position: absolute; width: 28vw; height: 28vw; max-width: 360px; max-height: 360px;
+    right: -11vw; top: -15vw; border: 38px solid rgba(42, 161, 152, .10); border-radius: 50%; pointer-events: none;
+  }
+  .slide > * { position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem; width: fit-content; margin: 0 0 .65rem;
+    color: var(--deep); font-size: .86rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase;
+  }
+  .eyebrow::before { content: ""; width: 10px; height: 10px; background: var(--coral); transform: rotate(45deg); }
+  h1, h2, h3, p { margin-top: 0; }
+  h1 { margin-bottom: .55rem; font-size: clamp(2.4rem, 5vw, 4.5rem); line-height: 1.18; letter-spacing: 0; }
+  h2 { margin-bottom: 1.35rem; color: var(--deep); font-size: clamp(2rem, 3.3vw, 3.15rem); line-height: 1.25; letter-spacing: 0; }
+  h3 { margin-bottom: .45rem; color: var(--deep); font-size: 1.25rem; line-height: 1.35; }
+  p { font-size: 1.12rem; line-height: 1.7; }
+  strong { color: var(--deep); }
+  .lead { max-width: 740px; color: var(--muted); font-size: clamp(1.15rem, 2vw, 1.55rem); }
+  .muted, .small { color: var(--muted); }
+  .small { font-size: .92rem; line-height: 1.55; }
+  .title-slide { align-items: center; text-align: center; }
+  .title-slide::after {
+    content: ""; width: min(68vw, 900px); height: 10px; margin-top: 1.5rem;
+    background: repeating-linear-gradient(90deg, var(--teal) 0 44px, transparent 44px 62px, var(--coral) 62px 88px, transparent 88px 106px, var(--yellow) 106px 132px, transparent 132px 150px);
+  }
+  .course-chip {
+    display: inline-block; margin-bottom: 1.5rem; padding: .52rem 1.05rem; border: 1px solid var(--teal);
+    background: var(--white); color: var(--deep); font-size: .9rem; font-weight: 800; letter-spacing: .06em;
+    box-shadow: 5px 5px 0 var(--mint);
+  }
+
+  .grid2, .grid3, .cols { display: grid; gap: 1.25rem; align-items: stretch; }
+  .grid2, .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card, .step, .stat, .flow-box {
+    border: 1px solid var(--line); background: rgba(255, 255, 255, .94); box-shadow: var(--shadow);
+  }
+  .card { padding: 1.35rem 1.45rem; border-radius: 8px; }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+  .accent-coral { border-top: 6px solid var(--coral); }
+  .accent-teal { border-top: 6px solid var(--teal); }
+  .accent-yellow { border-top: 6px solid var(--yellow); }
+  ul { margin: .35rem 0 0; padding-left: 1.25rem; font-size: 1.08rem; line-height: 1.72; }
+  li { margin-bottom: .35rem; }
+  .objective-list { columns: 2; column-gap: 2rem; max-width: 1000px; }
+  .objective-list li { break-inside: avoid; margin-bottom: .8rem; padding-left: .15rem; }
+  .objective-list li::marker { color: var(--coral); font-weight: 800; }
+  .key-phrase { margin-top: .6rem; padding: 1rem 1.25rem; border-left: 6px solid var(--coral); background: rgba(244, 201, 93, .2); font-size: 1.18rem; font-weight: 700; line-height: 1.6; }
+
+  .logic-flow { display: grid; grid-template-columns: 1fr auto 1.5fr auto 1fr; gap: .75rem; align-items: center; max-width: 1080px; }
+  .logic-node { min-height: 130px; padding: 1.1rem; display: flex; flex-direction: column; justify-content: center; border: 2px solid var(--deep); background: var(--white); text-align: center; box-shadow: 7px 7px 0 var(--mint); }
+  .logic-node.central { border-color: var(--coral); background: #fff7f4; }
+  .logic-node span { display: block; margin-bottom: .35rem; color: var(--deep); font-size: 1.25rem; font-weight: 800; }
+  .logic-node small { color: var(--muted); font-size: .9rem; line-height: 1.45; }
+  .arrow { color: var(--coral); font-size: 2rem; font-weight: 800; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--white); box-shadow: var(--shadow); font-size: 1rem; }
+  th, td { padding: .75rem .9rem; border: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.45; }
+  th { background: var(--deep); color: var(--white); font-weight: 800; }
+  tr:nth-child(even) td { background: #f1faf7; }
+  .yes { color: #147567; font-weight: 800; }
+  .no { color: var(--danger); font-weight: 800; }
+
+  .cycle { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6rem; max-width: 1080px; align-items: center; }
+  .cycle-step { min-height: 142px; padding: 1rem; border: 2px solid var(--teal); background: var(--white); text-align: center; }
+  .cycle-step:nth-child(2) { border-color: var(--coral); background: #fff7f4; }
+  .cycle-step:nth-child(3) { border-color: var(--yellow); background: #fffbed; }
+  .cycle-step:nth-child(4) { border-color: var(--deep); background: #eff9fb; }
+  .cycle-step b { display: block; margin-bottom: .5rem; color: var(--deep); font-size: 1.15rem; }
+  .cycle-step small { color: var(--muted); line-height: 1.45; }
+  .cycle-return { grid-column: 1 / -1; padding-top: .55rem; color: var(--coral); font-size: 1.1rem; font-weight: 800; text-align: center; }
+
+  .branching { display: grid; grid-template-columns: .85fr 1.5fr .85fr; gap: 1.2rem; align-items: center; max-width: 1100px; }
+  .branch-root { padding: 1.35rem; border: 2px solid var(--deep); background: var(--sky); font-weight: 800; text-align: center; }
+  .branch-question { padding: 1.5rem; border: 3px solid var(--coral); background: #fff7f4; text-align: center; font-size: 1.35rem; font-weight: 800; }
+  .branch-outcomes { display: grid; gap: .75rem; }
+  .branch-outcome { padding: .85rem 1rem; border-left: 7px solid var(--teal); background: var(--white); box-shadow: 5px 5px 0 var(--mint); font-weight: 700; }
+  .branch-outcome.alt { border-color: var(--yellow); }
+  .branch-outcome.warn { border-color: var(--coral); }
+
+  .retry-row { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: .8rem; align-items: center; max-width: 1080px; }
+  .retry-item { min-height: 125px; padding: 1.05rem 1.2rem; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
+  .retry-item b { display: block; margin-bottom: .35rem; color: var(--deep); }
+  .retry-item small { color: var(--muted); line-height: 1.5; }
+
+  pre { margin: 0; padding: 1.15rem 1.35rem; overflow: auto; border: 1px solid #a9d7d0; border-radius: 6px; background: #123f49; color: #ebfff8; font-family: "Cascadia Code", Consolas, monospace; font-size: .95rem; line-height: 1.58; white-space: pre-wrap; }
+  .code-note { margin-top: .75rem; padding: .7rem .95rem; border-left: 5px solid var(--yellow); background: #fffbed; color: #5b4a1b; font-size: .95rem; }
+  .tool-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .85rem; }
+  .tool { min-height: 146px; padding: 1rem; border: 1px solid var(--line); background: var(--white); box-shadow: 5px 5px 0 rgba(42, 161, 152, .13); }
+  .tool b { display: block; margin-bottom: .35rem; color: var(--deep); }
+  .tool small { color: var(--muted); line-height: 1.45; }
+  .number { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin-bottom: .55rem; background: var(--coral); color: var(--white); font-weight: 800; }
+  .exercise-table td { height: 48px; }
+
+  .progress { position: fixed; top: 0; left: 0; z-index: 20; height: 7px; background: var(--coral); transition: width .28s ease; }
+  .pageno, .navhint { position: fixed; z-index: 20; bottom: 1.55rem; color: var(--muted); font-size: .9rem; font-weight: 700; letter-spacing: .04em; }
+  .pageno { right: 2.2rem; }
+  .navhint { left: 2.2rem; }
+  .navbtn { position: fixed; top: 50%; z-index: 20; display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.9); color: var(--deep); box-shadow: 0 8px 20px rgba(20, 82, 85, .14); cursor: pointer; font-size: 1.7rem; line-height: 1; }
+  .navbtn:hover { border-color: var(--teal); background: var(--mint); }
+  #prevBtn { left: 1.4rem; }
+  #nextBtn { right: 1.4rem; }
+
+  @media (max-width: 850px) {
+    .slide { padding: 6vh 10vw 10vh; overflow-y: auto; justify-content: flex-start; }
+    .grid2, .grid3, .cols, .logic-flow, .branching, .retry-row { grid-template-columns: 1fr; }
+    .cycle, .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cycle-return { grid-column: 1 / -1; }
+    .arrow { transform: rotate(90deg); text-align: center; }
+    .objective-list { columns: 1; }
+    .navhint { display: none; }
+    .navbtn { top: auto; bottom: 1.1rem; transform: none; }
+    #prevBtn { left: 1.25rem; }
+    #nextBtn { right: 4.8rem; }
+    .pageno { bottom: 2.15rem; right: 1.35rem; }
+  }
+  @media (max-height: 720px) and (min-width: 851px) {
+    .slide { padding-top: 5vh; padding-bottom: 5vh; }
+    h2 { margin-bottom: .8rem; }
+    .card { padding: 1rem 1.2rem; }
+    ul, p { font-size: 1rem; line-height: 1.55; }
+    .cycle-step { min-height: 115px; padding: .75rem; }
+    .tool { min-height: 115px; padding: .75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="pageno" id="pageno"></div>
+<div class="navhint">使用方向鍵、空白鍵或按鈕翻頁</div>
+<button class="navbtn" id="prevBtn" type="button" aria-label="上一頁">&#8249;</button>
+<button class="navbtn" id="nextBtn" type="button" aria-label="下一頁">&#8250;</button>
+
+<main class="deck" id="deck">
+  <section class="slide title-slide active">
+    <div class="course-chip">2026 秋季班 | 8/04 第03堂</div>
+    <h1>巨量數據調度工程<br>與非結構化資料轉換</h1>
+    <p class="lead">從結構化試算表到非結構化文件，打造能自動彙整企業資料的批次處理引擎。</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">Lesson 03</div>
+    <h2>本堂學習目標</h2>
+    <p class="muted">完成本堂課後，學員將能夠：</p>
+    <ol class="objective-list">
+      <li>說明 AI Agent 處理大量資料的典型架構與流程</li>
+      <li>區別「結構化資料」與「非結構化資料」的差異</li>
+      <li>使用程式對試算表（Excel / CSV）進行讀取、篩選、排序與寫入</li>
+      <li>建立批次處理流程，自動化彙整來自多份活頁簿的異質資料</li>
+    </ol>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 1</div>
+    <h2>為什麼資料處理是 Agent 的核心能力？</h2>
+    <p>企業裡大量工作時間花在「整理資料」：把多份 Excel 報表合併成一份、從上百筆記錄中找出符合條件的資料、將不同格式的資料統一成標準格式。這些工作<strong>重複性高、規則性強</strong>，是 AI Agent 最能發揮價值的場景。</p>
+    <div class="key-phrase">典型企業痛點：每個月月底，業務助理要花一整天，手動把 20 個業務員各自回傳的 Excel 報價單，複製貼上到一份匯總表裡，再計算每個業務的總業績。用 Agent 處理，整個流程可以在幾分鐘內完成。</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 2</div>
+    <h2>結構化資料 vs. 非結構化資料</h2>
+    <table>
+      <tr><th></th><th>結構化資料</th><th>非結構化資料</th></tr>
+      <tr><td><strong>定義</strong></td><td>有固定格式，可直接用程式讀取</td><td>沒有固定格式，需要解析才能使用</td></tr>
+      <tr><td><strong>範例</strong></td><td>Excel 表格、CSV 檔、資料庫</td><td>PDF 報告、電子郵件、掃描圖片</td></tr>
+      <tr><td><strong>處理難度</strong></td><td>相對容易</td><td>需借助 AI 或 OCR 技術</td></tr>
+      <tr><td><strong>典型工作</strong></td><td>篩選、排序、計算</td><td>資訊提取、摘要、分類</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 2</div>
+    <h2>從非結構化轉為結構化的典型流程</h2>
+    <div class="logic-flow" style="grid-template-columns: 1fr auto 1fr auto 1fr; max-width:1160px;">
+      <div class="logic-node"><span>原始資料</span><small>PDF 合約、郵件內文、掃描文件</small></div>
+      <div class="arrow">&rarr;</div>
+      <div class="logic-node central"><span>AI / OCR 解析</span><small>提取關鍵欄位並清理驗證</small></div>
+      <div class="arrow">&rarr;</div>
+      <div class="logic-node"><span>結構化資料表</span><small>可存入 Excel 或資料庫</small></div>
+    </div>
+    <p class="small" style="margin-top:1rem;">有了結構化資料表，才能進行後續分析與報表生成，產出最終報告。</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 3</div>
+    <h2>Excel / CSV 自動化處理工具</h2>
+    <table>
+      <tr><th>工具</th><th>適用情境</th><th>特點</th></tr>
+      <tr><td><strong>openpyxl</strong></td><td>讀寫 .xlsx 格式的 Excel</td><td>可保留原有格式、樣式</td></tr>
+      <tr><td><strong>pandas</strong></td><td>大量資料的分析與計算</td><td>功能強大，適合數據分析</td></tr>
+      <tr><td><strong>csv 模組</strong></td><td>讀寫 .csv 純文字表格</td><td>輕量，適合簡單場景</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 3</div>
+    <h2>試算表操作的基本動作</h2>
+    <table>
+      <tr><th>動作</th><th>說明</th></tr>
+      <tr><td>讀取（Read）</td><td>從檔案載入資料到程式</td></tr>
+      <tr><td>篩選（Filter）</td><td>只取出符合條件的列</td></tr>
+      <tr><td>排序（Sort）</td><td>依照某欄位大小排列順序</td></tr>
+      <tr><td>計算（Calculate）</td><td>加總、平均、計數等</td></tr>
+      <tr><td>寫入（Write）</td><td>把處理結果存回檔案</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 4</div>
+    <h2>跨活頁簿資料整合（批次處理）</h2>
+    <p><strong>批次處理（Batch Processing）</strong>是指一次性處理大量同類型任務，而不是一筆一筆手動處理。</p>
+    <div class="grid2">
+      <div>
+        <pre>資料夾結構：
+  /業務報表/
+    ├── 北區業務_王大明.xlsx
+    ├── 中區業務_李小華.xlsx
+    ├── 南區業務_張美玲.xlsx
+    └── ... (共 20 個檔案)</pre>
+      </div>
+      <div class="card accent-teal">
+        <h3>目標</h3>
+        <p>自動讀取所有檔案 &rarr; 彙整到一份「匯總表.xlsx」&rarr; 計算各業務業績合計</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 4</div>
+    <h2>批次處理的核心邏輯</h2>
+    <div class="cycle" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="cycle-step"><b>1. 找到檔案</b><small>列出資料夾內所有需要處理的 .xlsx 檔案</small></div>
+      <div class="cycle-step"><b>2. 逐一處理</b><small>迴圈讀取每份檔案，提取需要的欄位</small></div>
+      <div class="cycle-step"><b>3. 整理計算</b><small>對總彙整清單進行排序、計算、格式化</small></div>
+      <div class="cycle-step"><b>4. 輸出結果</b><small>將整理後的資料寫入新的 Excel 檔案</small></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">核心概念 5</div>
+    <h2>AI 在資料處理中的角色</h2>
+    <p>傳統資料處理需要明確規則，但現實世界的資料往往<strong>格式不統一</strong>，這時 AI 就能發揮作用：</p>
+    <table>
+      <tr><th>角色</th><th>說明</th><th>範例</th></tr>
+      <tr><td><strong>格式識別</strong></td><td>理解不同格式的資料代表什麼</td><td>「NT$12,000」「12000元」都代表 12000 元</td></tr>
+      <tr><td><strong>缺失值補充</strong></td><td>根據上下文推斷缺失的資訊</td><td>從「台北辦公室」推斷地區為「北區」</td></tr>
+      <tr><td><strong>異常偵測</strong></td><td>找出資料中不合理的值</td><td>業績填寫為負數 &rarr; 可能是錯誤</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作一</div>
+    <h2>讀取並篩選 Excel 資料</h2>
+    <div class="grid2">
+      <article class="card accent-teal"><div class="number">1</div><h3>安裝套件</h3><p>安裝 <strong>pandas</strong> 與 <strong>openpyxl</strong> 套件。</p></article>
+      <article class="card accent-yellow"><div class="number">2</div><h3>準備測試資料</h3><p>建立 <strong>sample_data.xlsx</strong>，包含業務員、地區、銷售金額、日期欄位。</p></article>
+    </div>
+    <pre style="margin-top:1rem;">安裝 openpyxl 套件:
+    pip install openpyxl
+
+安裝 pandas 套件:
+    pip install pandas openpyxl</pre>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作一</div>
+    <h2>向 GitHub Copilot 描述需求</h2>
+    <pre>請幫我用 Python 和 pandas 寫一個程式：
+1. 讀取 sample_data.xlsx 的資料
+2. 篩選出「銷售金額」超過 40000 的記錄
+3. 依照「銷售金額」由高到低排序
+4. 計算所有業務員的銷售金額總計
+5. 把結果輸出到新的 filtered_result.xlsx 檔案</pre>
+    <div class="code-note">檢查重點：篩選條件是否正確？排序方向是否符合需求？輸出檔案是否包含所有必要欄位？</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作二</div>
+    <h2>批次彙整多份活頁簿</h2>
+    <div class="grid2">
+      <article class="card accent-teal"><div class="number">1</div><h3>準備測試檔案</h3><p>在「報表資料/」資料夾中建立 3-5 個模擬 xlsx 檔案。</p></article>
+      <article class="card accent-coral"><div class="number">2</div><h3>加入 AI 輔助</h3><p>讓 AI 幫助處理欄位名稱、金額格式不一致的問題。</p></article>
+    </div>
+    <pre style="margin-top:1rem;">請幫我用 Python 寫一個批次處理程式：
+1. 掃描「報表資料」資料夾內所有的 .xlsx 檔案
+2. 讀取每個檔案的資料（假設欄位格式相同）
+3. 把所有資料合併到一個 DataFrame
+4. 新增一個「來源檔案」欄位，記錄每筆資料來自哪個檔案
+5. 依照業務員計算各自的銷售金額加總
+6. 將匯總結果輸出到「月份彙整報表.xlsx」</pre>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">實作三</div>
+    <h2>AI Agent 驅動的資料清理</h2>
+    <pre>我要建立一個資料清理 Agent：
+1. 讀取一份包含格式不一致資料的 Excel 檔
+2. 對每一列資料，呼叫 LLM API 進行格式標準化
+3. 將清理後的資料寫回新的 Excel 檔案
+4. 如果某一列資料 AI 無法確定，標記為「需人工審查」
+請幫我設計這個程式的架構</pre>
+    <div class="code-note">設計提醒：無法確定的資料不要讓 AI「猜」，一律標記為需人工審查，避免錯誤資料流入下游報表。</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">程式碼範例</div>
+    <h2>讀取與篩選試算表（虛擬碼）</h2>
+    <pre>載入 pandas 套件
+
+# 讀取 Excel 檔案
+資料表 = 讀取Excel("sample_data.xlsx", 工作表="Sheet1")
+
+# 篩選：銷售金額超過 40000
+篩選結果 = 資料表[ 資料表["銷售金額"] > 40000 ]
+
+# 排序：由高到低
+排序結果 = 篩選結果.依照("銷售金額", 由大到小=真)
+
+# 計算加總
+總計 = 篩選結果["銷售金額"].加總()
+
+# 輸出到新 Excel 檔案
+排序結果.寫入Excel("filtered_result.xlsx", 不含索引=真)</pre>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">程式碼範例</div>
+    <h2>批次彙整多份活頁簿（虛擬碼）</h2>
+    <pre>載入 pandas, os, pathlib 套件
+
+資料夾路徑 = "報表資料/"
+所有資料 = []  # 用來收集所有檔案的資料
+
+對 每個檔案 在 列出資料夾(資料夾路徑, 篩選="*.xlsx") 中:
+    當前資料 = 讀取Excel(檔案路徑)
+    當前資料["來源檔案"] = 檔案名稱
+    所有資料.加入(當前資料)
+
+彙整資料 = 合併所有(所有資料)
+業績彙總 = 彙整資料.依照("業務員").計算加總("銷售金額")
+業績彙總.寫入Excel("月份彙整報表.xlsx")</pre>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">程式碼範例</div>
+    <h2>AI 輔助的格式標準化（虛擬碼）</h2>
+    <pre>函式 標準化欄位(原始值, 欄位類型):
+    提示詞 = f"""
+    我有一筆資料："{原始值}"
+    這是「{欄位類型}」欄位的值，請轉換為標準格式：
+    - 金額：只回傳數字（不含符號與逗號）
+    - 日期：轉換為 YYYY-MM-DD 格式
+    - 無法判斷：只回傳「UNKNOWN」
+    """
+    回傳 呼叫LLM(提示詞)
+
+對 每一列資料 在 資料表 中:
+    資料["銷售金額"] = 標準化欄位(資料["銷售金額"], "金額")
+    資料["日期"] = 標準化欄位(資料["日期"], "日期")
+    如果 任何欄位 == "UNKNOWN":
+        資料["備註"] = "需人工審查"</pre>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">課堂練習</div>
+    <h2>練習 1：設計資料處理流程</h2>
+    <p>情境：每週一，各部門主管會以電子郵件回傳一份本週銷售紀錄的 Excel 檔案（格式略有不同）。需要自動彙整所有部門的銷售資料，計算各部門總業績，並生成一份比較報表。</p>
+    <table class="exercise-table">
+      <tr><th>設計面向</th><th>你的答案</th></tr>
+      <tr><td>需要哪些步驟？</td><td></td></tr>
+      <tr><td>每個步驟的輸入和輸出是什麼？</td><td></td></tr>
+      <tr><td>哪些地方可能出現問題？</td><td></td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">課堂練習</div>
+    <h2>練習 2：資料識別</h2>
+    <p>以下資料代表同樣的含義，但格式不同。請判斷 AI 需要做哪些處理才能統一它們：</p>
+    <table>
+      <tr><th>原始資料</th><th>應標準化為</th></tr>
+      <tr><td>NT$12,500</td><td></td></tr>
+      <tr><td>1萬2千5百元</td><td></td></tr>
+      <tr><td>12500.00</td><td></td></tr>
+      <tr><td>$12,500 USD</td><td></td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">課後作業</div>
+    <h2>把資料處理流程動手做一次</h2>
+    <div class="grid2">
+      <article class="card accent-teal">
+        <h3>1. 動手實作</h3>
+        <p>在你的電腦上建立 3 份格式相同的 Excel 檔案（可手動填寫一些測試資料），然後用 GitHub Copilot 協助你寫一個批次彙整程式。</p>
+      </article>
+      <article class="card accent-coral">
+        <h3>2. 格式挑戰</h3>
+        <p>將 3 份 Excel 故意使用不同的欄位名稱（如：「姓名」vs「業務員」vs「員工」），看看你的程式能否正確合併，或是需要額外的處理。</p>
+      </article>
+    </div>
+    <div class="key-phrase">下次帶著你的觀察來：哪些格式差異是程式可以自動處理的？哪些需要 AI 協助判斷？</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">延伸閱讀</div>
+    <h2>可以繼續深入的資源</h2>
+    <div class="grid2">
+      <div class="card accent-teal">
+        <h3>工具文件</h3>
+        <ul>
+          <li>pandas 官方文件</li>
+          <li>openpyxl 官方文件</li>
+        </ul>
+      </div>
+      <div class="card accent-yellow">
+        <h3>資料處理概念</h3>
+        <ul>
+          <li>《Python for Data Analysis》by Wes McKinney</li>
+          <li>ETL（Extract, Transform, Load）概念介紹</li>
+          <li>LangChain CSV Agent 教學</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide title-slide">
+    <div class="course-chip">第03堂 完</div>
+    <h1>Q &amp; A</h1>
+    <p class="lead">下一堂：8/11 | 跨平台 Web 數據擷取與異質系統整合</p>
+  </section>
+</main>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const progress = document.getElementById('progress');
+  const pageNumber = document.getElementById('pageno');
+  let index = 0;
+  let touchStartX = null;
+
+  function render() {
+    slides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === index));
+    progress.style.width = `${((index + 1) / total) * 100}%`;
+    pageNumber.textContent = `${index + 1} / ${total}`;
+  }
+
+  function go(delta) {
+    index = Math.min(total - 1, Math.max(0, index + delta));
+    render();
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => go(-1));
+  document.getElementById('nextBtn').addEventListener('click', () => go(1));
+  window.addEventListener('keydown', (event) => {
+    if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(event.key)) {
+      event.preventDefault();
+      go(1);
+    }
+    if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) {
+      event.preventDefault();
+      go(-1);
+    }
+    if (event.key === 'Home') { index = 0; render(); }
+    if (event.key === 'End') { index = total - 1; render(); }
+  });
+  window.addEventListener('touchstart', (event) => { touchStartX = event.touches[0].clientX; });
+  window.addEventListener('touchend', (event) => {
+    if (touchStartX === null) return;
+    const distance = event.changedTouches[0].clientX - touchStartX;
+    if (distance > 50) go(-1);
+    if (distance < -50) go(1);
+    touchStartX = null;
+  });
+  render();
+</script>
+</body>
+</html>
